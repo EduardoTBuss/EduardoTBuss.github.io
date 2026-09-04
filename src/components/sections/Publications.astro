@@ -1,0 +1,12 @@
+---
+import Section from '../Section.astro';
+import ItemList from '../ItemList.astro';
+import PublicationItem from '../PublicationItem.astro';
+import { getPublications } from '../../lib/content';
+const publications = getPublications();
+---
+<Section id="publications" title="Publications">
+  <ItemList>
+    {publications.map((publication) => <PublicationItem publication={publication} />)}
+  </ItemList>
+</Section>

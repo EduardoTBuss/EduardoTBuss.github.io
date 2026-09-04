@@ -1,0 +1,32 @@
+---
+/**
+ * A titled section of the home page. Every section uses this, which is what
+ * makes Publications and Selected work carry identical visual weight: same
+ * heading size, same rhythm above and below, no exceptions.
+ */
+interface Props {
+  id: string;
+  title: string;
+  /** Small text rendered next to the heading, e.g. an update date. */
+  note?: string;
+}
+const { id, title, note } = Astro.props;
+---
+<section id={id} aria-labelledby={`${id}-heading`}>
+  <div class="head">
+    <h2 id={`${id}-heading`}>{title}</h2>
+    {note && <span class="meta">{note}</span>}
+  </div>
+  <slot />
+</section>
+
+<style>
+  section { margin-top: var(--space-section); }
+  .head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--s4);
+    margin-bottom: var(--space-heading);
+  }
+</style>

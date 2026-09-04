@@ -1,0 +1,27 @@
+{
+  "name": "eduardotbuss.github.io",
+  "type": "module",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Personal site and portfolio of Eduardo Timm Buss. Static Astro build, zero client-side JavaScript.",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "sync:data": "node scripts/sync-data.mjs",
+    "dev": "npm run sync:data && astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "node scripts/check-project-pages.mjs && astro check",
+    "budget": "node scripts/check-budget.mjs",
+    "verify": "npm run sync:data && npm run check && npm run build && npm run budget"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.7.4",
+    "astro": "^6.4.8"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.10",
+    "typescript": "^6.0.3"
+  }
+}

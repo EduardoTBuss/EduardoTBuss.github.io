@@ -1,0 +1,7 @@
+node_modules/
+dist/
+.astro/
+# Synced from the EduardoTBuss repository at build time. Never committed here:
+# there is exactly one writer per data file, and it is not this repository.
+src/data/
+.DS_Store

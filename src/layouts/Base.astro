@@ -1,0 +1,47 @@
+---
+/** The page shell: head, skip link, main, footer. Every route uses it. */
+import '../styles/tokens.css';
+import '../styles/base.css';
+import Footer from '../components/Footer.astro';
+import { getProfile } from '../lib/content';
+
+interface Props {
+  title: string;
+  description: string;
+  /** JSON-LD object, serialised into a script tag. Optional. */
+  jsonLd?: Record<string, unknown>;
+}
+
+const { title, description, jsonLd } = Astro.props;
+const profile = getProfile();
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const ogImage = new URL('/og.png', Astro.site).href;
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta name="author" content={profile.name} />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    {jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <main id="main">
+      <slot />
+      <Footer />
+    </main>
+  </body>
+</html>

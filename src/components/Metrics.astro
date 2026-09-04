@@ -1,0 +1,24 @@
+---
+/** The measured numbers of a project page, as a definition list. */
+interface Props { metrics: { label: string; value: string }[] }
+const { metrics } = Astro.props;
+---
+<dl>
+  {metrics.map((m) => (
+    <Fragment>
+      <dt>{m.label}</dt>
+      <dd><code>{m.value}</code></dd>
+    </Fragment>
+  ))}
+</dl>
+
+<style>
+  dl { margin: 0; }
+  dt {
+    font-size: var(--fs-sm);
+    color: var(--fg-muted);
+    margin-top: var(--s3);
+  }
+  dt:first-child { margin-top: 0; }
+  dd { margin: var(--s1) 0 0; }
+</style>

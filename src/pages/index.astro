@@ -1,0 +1,44 @@
+---
+/**
+ * The home page is a list of sections, on purpose. Reordering the site or
+ * dropping a section is a one-line change here; nothing else knows the order.
+ */
+import Base from '../layouts/Base.astro';
+import Hero from '../components/sections/Hero.astro';
+import About from '../components/sections/About.astro';
+import Research from '../components/sections/Research.astro';
+import Publications from '../components/sections/Publications.astro';
+import SelectedWork from '../components/sections/SelectedWork.astro';
+import Cv from '../components/sections/Cv.astro';
+import Now from '../components/sections/Now.astro';
+import Contact from '../components/sections/Contact.astro';
+import { getProfile } from '../lib/content';
+
+const p = getProfile();
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: p.name,
+  jobTitle: p.subtitle,
+  description: p.bio,
+  url: Astro.site?.href,
+  email: p.links.academic_email.replace('mailto:', ''),
+  affiliation: { '@type': 'CollegeOrUniversity', name: 'Universidade Federal de Pelotas' },
+  knowsAbout: p.interests,
+  sameAs: [p.links.github, p.links.linkedin, p.links.orcid],
+};
+---
+<Base
+  title={`${p.name} — ${p.role}`}
+  description={p.bio}
+  jsonLd={jsonLd}
+>
+  <Hero />
+  <About />
+  <Research />
+  <Publications />
+  <SelectedWork />
+  <Cv />
+  <Now />
+  <Contact />
+</Base>

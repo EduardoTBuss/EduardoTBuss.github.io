@@ -1,0 +1,20 @@
+---
+import Section from '../Section.astro';
+import ItemList from '../ItemList.astro';
+import ProjectItem from '../ProjectItem.astro';
+import { getSelectedWork, getProfile } from '../../lib/content';
+const projects = getSelectedWork();
+const profile = getProfile();
+---
+<Section id="work" title="Selected work">
+  <ItemList>
+    {projects.map((project) => <ProjectItem project={project} />)}
+  </ItemList>
+  <p class="meta more">
+    <a href={`${profile.links.github}?tab=repositories`} rel="noopener">Other repositories on GitHub</a>
+  </p>
+</Section>
+
+<style>
+  .more { margin-top: var(--space-item); }
+</style>

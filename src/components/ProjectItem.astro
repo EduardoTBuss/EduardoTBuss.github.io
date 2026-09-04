@@ -1,0 +1,36 @@
+---
+import ListItem from './ListItem.astro';
+import type { Project, Publication } from '../lib/schemas';
+
+interface Props {
+  project: Project & { relatedPublications: Publication[]; href: string | null };
+}
+const { project } = Astro.props;
+---
+<ListItem>
+  <Fragment slot="title">
+    {project.href
+      ? <a href={project.href}>{project.title}</a>
+      : <a href={project.links.repo} rel="noopener">{project.title}</a>}
+    <span class="tagline"> &mdash; {project.tagline}</span>
+  </Fragment>
+
+  <Fragment slot="meta">
+    {project.category} &middot; {project.languages.join(', ')} &middot; {project.year}
+    {project.headline_metric && <><br /><code>{project.headline_metric}</code></>}
+  </Fragment>
+
+  <Fragment slot="links">
+    {project.href && <a href={project.href}>Read more</a>}
+    {project.href && <span aria-hidden="true"> &middot; </span>}
+    <a href={project.links.repo} rel="noopener">Repository</a>
+    {project.relatedPublications.map((p) => (
+      <Fragment><span aria-hidden="true"> &middot; </span><a href={`#pub-${p.id}`}>Paper: {p.venue}</a></Fragment>
+    ))}
+  </Fragment>
+</ListItem>
+
+<style>
+  .tagline { font-weight: 400; }
+  code { font-size: var(--fs-xs); }
+</style>

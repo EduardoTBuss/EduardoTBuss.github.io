@@ -1,0 +1,22 @@
+---
+import { getProfile } from '../../lib/content';
+const p = getProfile();
+---
+<header>
+  <h1>{p.name}</h1>
+  <p class="role">{p.role} &middot; {p.subtitle}</p>
+  <p class="lede">{p.bio}</p>
+  <p class="meta">
+    {p.location} &middot;
+    <a href={p.links.github} rel="noopener">GitHub</a> &middot;
+    <a href={p.links.linkedin} rel="noopener">LinkedIn</a> &middot;
+    <a href={p.links.orcid} rel="noopener">ORCID</a>
+  </p>
+</header>
+
+<style>
+  header { padding-top: var(--s8); }
+  .role { margin-top: var(--s3); color: var(--fg-muted); }
+  .lede { margin-top: var(--s4); }
+  .meta { margin-top: var(--s4); }
+</style>

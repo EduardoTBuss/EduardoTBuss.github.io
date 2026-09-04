@@ -1,0 +1,69 @@
+---
+import Section from '../Section.astro';
+import { getCv, getPublications } from '../../lib/content';
+const cv = getCv();
+const publications = getPublications();
+---
+<Section id="cv" title="CV" note={`Updated ${cv.updated}`}>
+  <h3>Education</h3>
+  <dl>
+    {cv.education.map((e) => (
+      <Fragment>
+        <dt>{e.degree}<span class="period"> &middot; {e.period}</span></dt>
+        <dd>{e.institution}. {e.detail}</dd>
+      </Fragment>
+    ))}
+  </dl>
+
+  <h3>Research experience</h3>
+  <dl>
+    {cv.experience.map((e) => (
+      <Fragment>
+        <dt>{e.role}<span class="period"> &middot; {e.period}</span></dt>
+        <dd>{e.org}. {e.detail}</dd>
+      </Fragment>
+    ))}
+  </dl>
+
+  <h3>Publications</h3>
+  <p class="meta">
+    {publications.length} peer-reviewed papers &mdash; see the
+    <a href="#publications">Publications</a> section above.
+  </p>
+
+  <h3>Technical skills</h3>
+  <dl>
+    {cv.skills.map((s) => (
+      <Fragment>
+        <dt>{s.group}</dt>
+        <dd>{s.items.join(', ')}</dd>
+      </Fragment>
+    ))}
+  </dl>
+
+  {cv.awards.length > 0 && (
+    <Fragment>
+      <h3>Awards</h3>
+      <dl>
+        {cv.awards.map((a) => (
+          <Fragment>
+            <dt>{a.title}</dt>
+            <dd>{a.year}</dd>
+          </Fragment>
+        ))}
+      </dl>
+    </Fragment>
+  )}
+
+  {cv.pdf && <p><a href={cv.pdf}>Download as PDF</a></p>}
+</Section>
+
+<style>
+  h3 { margin-top: var(--space-item); }
+  h3:first-of-type { margin-top: 0; }
+  dl { margin: var(--s3) 0 0; }
+  dt { font-weight: 600; margin-top: var(--s4); }
+  dt:first-child { margin-top: 0; }
+  .period { font-weight: 400; color: var(--fg-muted); font-size: var(--fs-sm); }
+  dd { margin: var(--s1) 0 0; color: var(--fg-muted); font-size: var(--fs-sm); }
+</style>

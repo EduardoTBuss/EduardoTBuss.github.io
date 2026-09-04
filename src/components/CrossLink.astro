@@ -1,0 +1,13 @@
+---
+/**
+ * The paper -> code link. When the project has a page of its own the link is
+ * internal; when it does not (cifar10-cnn-pytorch) it degrades to the
+ * repository on GitHub. Either way it is never a dead internal anchor.
+ */
+import type { ProjectRef } from '../lib/content';
+interface Props { project: ProjectRef }
+const { project } = Astro.props;
+---
+{project.href
+  ? <a href={project.href}>Code: {project.title}</a>
+  : <a href={project.externalUrl} rel="noopener">Code: {project.title} (GitHub)</a>}

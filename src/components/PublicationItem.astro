@@ -1,0 +1,27 @@
+---
+import ListItem from './ListItem.astro';
+import CrossLink from './CrossLink.astro';
+import { publicationLink, type ProjectRef } from '../lib/content';
+import type { Publication } from '../lib/schemas';
+
+interface Props { publication: Publication & { relatedProjects: ProjectRef[] } }
+const { publication } = Astro.props;
+const link = publicationLink(publication);
+---
+<ListItem>
+  <Fragment slot="title">
+    <span id={`pub-${publication.id}`}>{publication.title}</span>
+  </Fragment>
+
+  <Fragment slot="meta">
+    {publication.venue}, {publication.year}
+    {publication.status !== 'published' && <> ({publication.status})</>}
+  </Fragment>
+
+  <Fragment slot="links">
+    {link && <a href={link.url} rel="noopener">{link.label}</a>}
+    {publication.relatedProjects.map((project, i) => (
+      <Fragment>{(link || i > 0) && <span aria-hidden="true"> &middot; </span>}<CrossLink project={project} /></Fragment>
+    ))}
+  </Fragment>
+</ListItem>

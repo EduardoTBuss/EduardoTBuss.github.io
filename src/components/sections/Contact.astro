@@ -1,0 +1,29 @@
+---
+import Section from '../Section.astro';
+import { getProfile } from '../../lib/content';
+const p = getProfile();
+const email = p.links.academic_email.replace('mailto:', '');
+---
+<Section id="contact" title="Contact">
+  <p>
+    The fastest way to reach me is email. I read messages about research
+    collaboration, graduate positions and anything on this page.
+  </p>
+  <dl>
+    <dt>Email</dt>
+    <dd><a href={p.links.academic_email}>{email}</a></dd>
+    <dt>GitHub</dt>
+    <dd><a href={p.links.github} rel="noopener">{p.username}</a></dd>
+    <dt>LinkedIn</dt>
+    <dd><a href={p.links.linkedin} rel="noopener">eduardotimmbuss</a></dd>
+    <dt>ORCID</dt>
+    <dd><a href={p.links.orcid} rel="noopener">0009-0007-6356-5438</a></dd>
+  </dl>
+</Section>
+
+<style>
+  dl { margin: 0; }
+  dt { font-weight: 600; margin-top: var(--s4); font-size: var(--fs-sm); color: var(--fg-muted); }
+  dt:first-child { margin-top: 0; }
+  dd { margin: var(--s1) 0 0; }
+</style>

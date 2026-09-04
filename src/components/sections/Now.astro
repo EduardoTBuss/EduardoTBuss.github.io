@@ -1,0 +1,18 @@
+---
+import Section from '../Section.astro';
+import { getNow } from '../../lib/content';
+const now = getNow();
+---
+{now && (
+  <Section id="now" title="Now" note={`Updated ${now.updated}`}>
+    <ul>
+      {now.lines.map((line) => <li>{line}</li>)}
+    </ul>
+  </Section>
+)}
+
+<style>
+  ul { padding-left: var(--s5); }
+  li { margin-top: var(--s3); }
+  li:first-child { margin-top: 0; }
+</style>

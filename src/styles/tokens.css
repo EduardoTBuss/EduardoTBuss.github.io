@@ -1,0 +1,60 @@
+/*
+ * Every visual decision on this site lives here. Nothing else in the codebase
+ * hardcodes a colour, a font size or a spacing value -- they all read var(--x).
+ * Changing the accent colour, the measure or the type scale is a one-line edit
+ * in this file.
+ */
+:root {
+  color-scheme: light dark;
+
+  /* Colour. There is exactly one accent, and it only ever paints links and
+     focus rings -- never a background, a block border or heading text. There is
+     no second semantic colour: no success green, no warning red. */
+  --bg: #ffffff;
+  --fg: #1a1a1a;
+  --fg-muted: #5a5a5a;
+  --accent: #0b57d0;
+  --rule: #e3e3e3;
+  --code-bg: #f5f5f5;
+
+  /* Type. One family, taken from the system, so the page transfers zero bytes
+     of webfont out of a 100KB budget. Mono is used only inside <code>. */
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  /* Minor third scale, ratio 1.2, base 17px: the column is narrow and the
+     visitor reads a lot of prose. */
+  --fs-xs: 0.83rem;
+  --fs-sm: 0.94rem;
+  --fs-base: 1.0625rem;
+  --fs-md: 1.20rem;
+  --fs-lg: 1.44rem;
+  --fs-xl: 1.73rem;
+
+  --lh-body: 1.6;
+  --lh-heading: 1.25;
+
+  /* Spacing, 4px base. */
+  --s1: 4px;  --s2: 8px;  --s3: 12px; --s4: 16px; --s5: 24px;
+  --s6: 32px; --s7: 48px; --s8: 64px; --s9: 96px;
+
+  --measure: 44rem;
+  --gutter: var(--s5);
+
+  /* Named rhythm, so a component never picks a raw step by feel. */
+  --space-section: var(--s8);
+  --space-heading: var(--s5);
+  --space-item: var(--s5);
+  --space-paragraph: var(--s4);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #121212;
+    --fg: #e8e8e8;
+    --fg-muted: #a6a6a6;
+    --accent: #8ab4f8;
+    --rule: #2a2a2a;
+    --code-bg: #1e1e1e;
+  }
+}

@@ -1,0 +1,22 @@
+---
+import Section from '../Section.astro';
+import { getResearch } from '../../lib/content';
+const items = getResearch();
+---
+<Section id="research" title="Research">
+  <dl>
+    {items.map((item) => (
+      <Fragment>
+        <dt>{item.title}</dt>
+        <dd>{item.detail}</dd>
+      </Fragment>
+    ))}
+  </dl>
+</Section>
+
+<style>
+  dl { margin: 0; }
+  dt { font-weight: 600; margin-top: var(--space-item); }
+  dt:first-child { margin-top: 0; }
+  dd { margin: var(--s1) 0 0; color: var(--fg-muted); font-size: var(--fs-sm); }
+</style>

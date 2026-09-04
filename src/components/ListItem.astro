@@ -1,0 +1,24 @@
+---
+/**
+ * One entry of a list, in three lines: title, metadata, links.
+ * Publications and projects both render through this component, which is the
+ * mechanical guarantee that neither section outweighs the other.
+ */
+---
+<li>
+  <p class="title"><slot name="title" /></p>
+  <p class="meta"><slot name="meta" /></p>
+  <p class="meta links"><slot name="links" /></p>
+</li>
+
+<style>
+  li {
+    padding-block: var(--space-item);
+    border-top: 1px solid var(--rule);
+  }
+  li:first-child { border-top: 0; padding-top: 0; }
+  p { margin: 0; }
+  .title { font-size: var(--fs-base); font-weight: 600; }
+  .meta { margin-top: var(--s1); }
+  .links:empty { display: none; }
+</style>

@@ -5,13 +5,17 @@ const p = getProfile();
 
 <header class="hero">
   <div class="hero-copy">
-    <p class="eyebrow"><span aria-hidden="true"></span> COMPUTER ENGINEERING & RESEARCH</p>
+    <p class="eyebrow"><span aria-hidden="true"></span> AI ENGINEERING / MACHINE LEARNING / RESEARCH</p>
     <h1>Eduardo<br />Timm Buss<span class="name-period">.</span></h1>
     <p class="hero-statement">
-      From abstract ideas to <em>working systems.</em>
+      From models to <em>reliable AI systems.</em>
+    </p>
+    <p class="hero-context">
+      I build LLM workflows, evaluate learning systems and research quantum-fuzzy methods
+      at UFPel. Every project shows its evidence and limits.
     </p>
     <div class="hero-actions">
-      <a class="button-primary" href="#explore">Explore research projects ↗</a><a
+      <a class="button-primary" href="#explore">See the work ↗</a><a
         class="button-text"
         href="/publications/">Read publications ↗</a>
     </div>
@@ -81,6 +85,13 @@ const p = getProfile();
     font-size: clamp(1.4rem, 2.5vw, 2.25rem);
     line-height: 1.32;
     letter-spacing: -0.04em;
+  }
+  .hero-context {
+    max-width: 35rem;
+    margin-top: var(--s4);
+    color: var(--fg-muted);
+    font-size: 1rem;
+    line-height: 1.6;
   }
   em {
     color: var(--accent);

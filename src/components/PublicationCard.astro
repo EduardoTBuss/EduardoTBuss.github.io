@@ -1,4 +1,4 @@
-﻿---
+---
 /** Native disclosure keeps topic notes usable with touch, keyboard, and JavaScript disabled. */
 import CrossLink from "./CrossLink.astro";
 import { publicationLink, type ProjectRef } from "../lib/content";
@@ -13,7 +13,7 @@ const link = publicationLink(publication);
 // Editorial topic descriptions derived only from the canonical titles; never paper abstracts or findings.
 const topics: Record<string, string> = {
   "cec-2026-hybrid-fuzzy-cri":
-    "A hybrid classical–quantum formulation of fuzzy CRI inference, with a triage case study.",
+    "A hybrid classical-quantum formulation of fuzzy CRI inference, with a triage case study.",
   "iceis-2026-encoding-slr":
     "A systematic literature review of classical data encoding strategies for hybrid quantum machine learning.",
   "eniac-2026-ql-implications":
@@ -23,7 +23,7 @@ const topics: Record<string, string> = {
   "weit-2025-imz":
     "An analysis of the IMZ algorithm through simulation in Qiskit.",
   "weciq-2025-bernstein-vazirani":
-    "A quantum analysis of the Bernstein–Vazirani algorithm with an implementation in Qiskit.",
+    "A quantum analysis of the Bernstein-Vazirani algorithm with an implementation in Qiskit.",
 };
 const description = abstract || topics[publication.id] || publication.title;
 ---

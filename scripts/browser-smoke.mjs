@@ -25,6 +25,7 @@ try {
     "/projects/nbody-sim/",
     "/projects/quantum-algorithms-qiskit/",
     "/projects/inventory-management-api/",
+    "/projects/order-forge/",
     "/projects/mnist-neural-network-numpy/",
     "/projects/poker-decision-analytics/",
     "/projects/q-fie/",
@@ -63,8 +64,13 @@ try {
   assert.deepEqual(
     await page.locator('.deck-slide .actions .primary').evaluateAll((links) =>
       links.map((link) => link.getAttribute('href'))),
-    ['/projects/q-fie/', '/projects/neuroevolution-sim/', '/projects/ray-tracer/'],
+    ['/projects/order-forge/', '/projects/q-fie/', '/projects/poker-decision-analytics/'],
   );
+  await page.goto(origin + '/projects/');
+  assert.equal(await page.locator('.deck-slide').count(), 3, 'featured projects');
+  assert.equal(await page.locator('.secondary-card').count(), 7, 'remaining case studies');
+  assert.equal(await page.locator('.catalog-card').count(), 16, 'linked public repositories');
+  await page.goto(origin);
   await page.screenshot({ path: out + "/desktop-home.png", fullPage: true });
   const pause = page.locator("[data-motion-toggle]");
   await pause.click();
@@ -189,7 +195,7 @@ try {
     ),
   );
   console.log(
-    "PASS: 14 routes; desktop/mobile; deck; publications; pause; reduced motion; no JS.",
+    `PASS: ${report.length} routes; desktop/mobile; deck; publications; pause; reduced motion; no JS.`,
   );
 } finally {
   await browser.close();

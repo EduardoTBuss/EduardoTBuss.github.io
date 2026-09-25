@@ -2,20 +2,24 @@
 /** Concept art, never presented as executable simulation or measured evidence. */
 interface Props {
   kind:
+    | "orderforge"
     | "physics"
     | "nbody"
     | "quantum"
     | "qfie"
+    | "poker"
     | "neuroevolution"
     | "raytracer"
     | "generic";
 }
 const { kind } = Astro.props;
 const labels = {
+  orderforge: ["APPLIED AI / DOCUMENT INTAKE", "Orders in. Validated data out."],
   physics: ["01 / DYNAMICS", "Order from collision."],
   nbody: ["02 / GRAVITATION", "Everything is connected."],
   quantum: ["03 / INTERFERENCE", "Beyond the classical."],
   qfie: ["QUANTUM / FUZZY INFERENCE", "States, rules, inference."],
+  poker: ["DECISION ANALYTICS / POKER", "Read the hand. Measure the risk."],
   neuroevolution: ["NEUROEVOLUTION / SEARCH", "Learning through exploration."],
   raytracer: ["RAY TRACING / LIGHT", "Following light through code."],
   generic: ["RESEARCH / BUILD", "Ideas made tangible."],
@@ -27,9 +31,34 @@ const label = labels[kind] ?? labels.generic;
   <div class="heading">
     <span>{label[0]}</span><span aria-hidden="true">✳</span>
   </div>
-  <div class="art" aria-hidden="true">
+  <div class="art" aria-hidden={kind !== "orderforge"}>
     {
-      kind === "nbody" ? (
+      kind === "orderforge" ? (
+        <div class="product-frame">
+          <img
+            src="/images/order-forge-reconciliation.png"
+            alt="Order Forge reconciliation screen showing seven resolved order lines and the EDIFACT export action"
+            loading="lazy"
+            width="666"
+            height="910"
+          />
+        </div>
+      ) : kind === "poker" ? (
+        <svg viewBox="0 0 500 360" class="poker-art">
+          <defs>
+            <linearGradient id="poker-card" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#e8f6fd" />
+              <stop offset="1" stop-color="#b7d5e9" />
+            </linearGradient>
+          </defs>
+          <g class="poker-grid"><path d="M50 295H450M50 240H450M50 185H450M50 130H450M50 75H450M80 52V310M160 52V310M240 52V310M320 52V310M400 52V310" /></g>
+          <path class="poker-range" d="M50 268C103 257 134 224 168 243S233 210 269 215 338 128 376 155 421 107 450 95V310H50Z" />
+          <path class="poker-line" d="M50 268C103 257 134 224 168 243S233 210 269 215 338 128 376 155 421 107 450 95" />
+          <g class="poker-card card-one"><rect x="94" y="93" width="86" height="119" rx="9" /><text x="107" y="126">A</text><text x="128" y="177">♠</text></g>
+          <g class="poker-card card-two"><rect x="178" y="105" width="86" height="119" rx="9" /><text x="190" y="138">K</text><text x="212" y="189">♠</text></g>
+          <text class="poker-axis" x="54" y="331">SESSION 01</text><text class="poker-axis" x="371" y="331">SESSION 92</text>
+        </svg>
+      ) : kind === "nbody" ? (
         <div class="universe">
           <>
             <div class="orbit one">
@@ -151,7 +180,7 @@ const label = labels[kind] ?? labels.generic;
   </div>
   <div class="caption">
     <p>{label[1]}</p><span
-      >Concept illustration · not a live simulation</span>
+      >{kind === "orderforge" ? "Screenshot from the project · workshop challenge" : "Concept illustration · not a live simulation"}</span>
   </div>
 </div>
 <style>
@@ -214,6 +243,26 @@ const label = labels[kind] ?? labels.generic;
     inset: 45px 0 80px;
     display: grid;
     place-items: center;
+  }
+  .orderforge .art {
+    inset: 50px 0 135px;
+  }
+  .orderforge .caption p {
+    font-size: clamp(20px, 2vw, 27px);
+  }
+  .product-frame {
+    width: min(78%, 340px);
+    height: 100%;
+    overflow: hidden;
+    border: 1px solid var(--rule-bright);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 24px 55px #0008;
+    transform: rotate(-3deg);
+  }
+  .product-frame img {
+    display: block;
+    width: 100%;
+    height: auto;
   }
   .universe {
     width: 330px;
@@ -440,6 +489,15 @@ const label = labels[kind] ?? labels.generic;
     stroke-width: 1.5;
     opacity: 0.65;
   }
+  .poker-grid { fill: none; stroke: var(--rule-bright); stroke-width: 1; opacity: .38; }
+  .poker-range { fill: #5da9d82a; }
+  .poker-line { fill: none; stroke: #8fddff; stroke-width: 3; filter: drop-shadow(0 0 7px #71c9e4); }
+  .poker-card { fill: url(#poker-card); stroke: #fff; stroke-width: 1.5; filter: drop-shadow(5px 12px 14px #0008); }
+  .poker-card text { fill: #17354a; stroke: none; font: 27px Georgia, serif; }
+  .poker-card text:nth-of-type(2) { font-size: 35px; }
+  .card-one { transform: rotate(-11deg); transform-origin: 137px 152px; }
+  .card-two { transform: rotate(10deg); transform-origin: 221px 164px; }
+  .poker-axis { fill: var(--fg-muted); font: 10px var(--font-mono); letter-spacing: .08em; }
   @keyframes orbit-spin {
     to {
       rotate: 360deg;

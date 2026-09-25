@@ -17,19 +17,19 @@ metrics:
 Most weekend gravitational simulators reach for explicit Euler, because it is the obvious
 method: advance the position with the velocity, advance the velocity with the acceleration.
 The orbits then spiral outward. It is tempting to read that as a bug in the force
-computation, and it is not — it is a structural property of the method. The question this
+computation, but it is a structural property of the method. The question this
 project set out to answer is which errors come from the physics and which come from the
 choice of time integrator, and how to tell the difference without guessing.
 
 ## Approach
 
 I treated the integrator as the object of study rather than an implementation detail. Four
-schemes — explicit Euler, semi-implicit Euler, Leapfrog/Velocity-Verlet and RK4 — sit behind
+schemes (explicit Euler, semi-implicit Euler, Leapfrog/Velocity-Verlet and RK4) sit behind
 one interface and can be swapped by name, or with a keystroke while the simulation is
 running. That turns an assertion into an experiment: the same orbit, the same step size,
 only the integrator changing. Correctness is then not a matter of the picture looking
-plausible, but of conserved quantities — energy, linear momentum, angular momentum, centre
-of mass — behaving as the theory says they must.
+plausible, but of conserved quantities (energy, linear momentum, angular momentum, centre
+of mass) behaving as the theory says they must.
 
 ## Architecture
 
@@ -47,9 +47,9 @@ values when there is no network.
 
 ## Measured results
 
-The signature experiment runs the same eccentric Sun–Earth orbit for roughly 400 orbits at a
+The signature experiment runs the same eccentric Sun-Earth orbit for roughly 400 orbits at a
 fixed step and changes only the integrator. Explicit Euler accumulates a relative energy
-error of 0.91 — monotonic, secular, the orbit visibly spiralling out. Semi-implicit Euler
+error of 0.91: monotonic and secular, with the orbit visibly spiralling out. Semi-implicit Euler
 stays bounded at 2.5e-3 and Leapfrog at 7.5e-6: both oscillate around the true value instead
 of drifting away from it. RK4 is the most accurate per step at 2.9e-7, but its error creeps
 secularly rather than oscillating, so on long enough integrations it loses to the symplectic
@@ -67,7 +67,7 @@ integrators and a hash-based golden test with a fixed seed.
 Making the integrator pluggable was the decision the whole project rests on: without it the
 comparison could only be described, not run. Non-dimensionalising the units early removed a
 class of magic constants that otherwise spreads through the code. Choosing conserved
-quantities as the correctness criterion meant the tests could be objective — energy drift is
+quantities as the correctness criterion meant the tests could be objective: energy drift is
 a number, "the orbit looks right" is not. Caching the Horizons ephemerides to disk and
 providing an offline fallback keeps the second run fast and keeps the test suite independent
 of the network.

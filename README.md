@@ -1,4 +1,4 @@
-﻿# Eduardo Timm Buss — personal site
+# Eduardo Timm Buss: personal site
 
 A modular Astro portfolio for research and engineering, with an immersive dark visual direction, a responsive project deck, and a lightweight interactive background. Pages render as static HTML for GitHub Pages; client JavaScript adds motion and interaction progressively.
 
@@ -38,6 +38,7 @@ Set `DATA_SOURCE` to use another canonical data directory. `npm run build` alone
 | Individual home sections | `src/components/sections/` |
 | Publication disclosure and topic notes | `src/components/PublicationCard.astro` |
 | Project prose | `src/content/projects/<slug>.md` |
+| Order Forge card screenshot | `public/images/order-forge-reconciliation.png` (copied from `Order-forge/docs/assets/`) |
 | Profile, project metadata, publication status, CV | `data/*.json` in the canonical sibling repository |
 | Homepage featured projects | `featuredSlugs` in `src/lib/content.ts` |
 | Validated content gateway | `src/lib/content.ts`, `src/lib/schemas.ts` |
@@ -64,8 +65,8 @@ The dependency scanner covers literal references emitted by the build. If an int
 
 ## Add a project
 
-1. Add canonical metadata to `data/projects.json` in the sibling repository. Set `pinned`, `has_page`, `order`, and related publication IDs as appropriate.
-2. Create `src/content/projects/<slug>.md` with `project: <slug>` in its frontmatter and two to four sourced numerical facts. Label configuration values as such; never present them as performance results.
+1. Add canonical metadata to `data/projects.json` in the sibling repository. Set `pinned`, `has_page`, `order`, and related publication IDs as appropriate. A project with `has_page: false` appears in the repository catalog and links directly to GitHub.
+2. For a detailed case study, set `has_page: true` and create `src/content/projects/<slug>.md` with `project: <slug>` in its frontmatter and sourced numerical facts. Label configuration values as such; never present them as performance results.
 3. Use the required headings, in order: Problem, Approach, Architecture, Measured results, Engineering decisions, Limitations, Links. Architecture contains exactly one paragraph.
 4. Run `npm run verify`. Numerical claims must be traceable to that project's repository or research notes.
 
@@ -90,4 +91,4 @@ Project decisions and debugging checkpoints are recorded in Eduardo's Brain (`si
 
 `scripts/browser-smoke.mjs` checks a running production preview at `http://127.0.0.1:4321`. It uses Playwright with an isolated headless Chrome, never your personal Chrome profile. Install Playwright in a test environment or point `PORTFOLIO_PLAYWRIGHT_MODULE` at its module entry, then run `node scripts/browser-smoke.mjs`. `PORTFOLIO_PREVIEW_URL` overrides the preview URL. Screenshots and the JSON report are written to gitignored `artifacts/qa/`.
 
-Coverage: all 14 routes, mobile widths 320/390/768, desktop 1440, project controls and keyboard, publication radio filters and disclosures, pause persistence, reduced motion, and JavaScript-disabled reading.
+Coverage: all 15 routes, mobile widths 320/390/768, desktop 1440, project controls and keyboard, publication radio filters and disclosures, pause persistence, reduced motion, and JavaScript-disabled reading.

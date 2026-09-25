@@ -1,8 +1,11 @@
 ---
 import Section from '../Section.astro';
-import { getCv, getPublications } from '../../lib/content';
+import { getCv, getPublications, getProject } from '../../lib/content';
 const cv = getCv();
 const publications = getPublications();
+const selectedProjects = ['order-forge', 'poker-decision-analytics', 'mnist-neural-network-numpy']
+  .map(getProject)
+  .filter((project) => project !== undefined);
 ---
 <Section id="cv" title="CV" note={`Updated ${cv.updated}`}>
   <h3>Education</h3>
@@ -25,9 +28,19 @@ const publications = getPublications();
     ))}
   </dl>
 
+  <h3>Selected projects</h3>
+  <ul class="project-list">
+    {selectedProjects.map((project) => (
+      <li>
+        <a href={`/projects/${project.slug}/`}>{project.title} ↗</a>
+        <span>{project.tagline}</span>
+      </li>
+    ))}
+  </ul>
+
   <h3>Publications</h3>
   <p class="meta">
-    {publications.length} publications &mdash; see the
+    {publications.length} publications. See the
     <a href="/publications/">complete publication list</a>.
   </p>
 
@@ -66,4 +79,7 @@ const publications = getPublications();
   dt:first-child { margin-top: 0; }
   .period { font-weight: 400; color: var(--fg-muted); font-size: var(--fs-sm); }
   dd { margin: var(--s1) 0 0; color: var(--fg-muted); font-size: var(--fs-sm); }
+  .project-list { list-style: none; padding: 0; margin-top: var(--s3); }
+  .project-list li { margin-top: var(--s4); display: flex; flex-direction: column; gap: var(--s1); }
+  .project-list span { color: var(--fg-muted); font-size: var(--fs-sm); }
 </style>

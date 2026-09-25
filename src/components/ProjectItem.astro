@@ -12,7 +12,7 @@ const { project } = Astro.props;
     {project.href
       ? <a href={project.href}>{project.title}</a>
       : <a href={project.links.repo} rel="noopener">{project.title}</a>}
-    <span class="tagline"> &mdash; {project.tagline}</span>
+    <span class="tagline">: {project.tagline}</span>
   </Fragment>
 
   <Fragment slot="meta">

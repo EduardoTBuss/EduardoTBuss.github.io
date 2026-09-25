@@ -5,11 +5,13 @@ import { projectHref } from "../lib/content";
 import ProjectVisual from "./ProjectVisual.astro";
 interface Props {
   project: Project;
-  mediaType?: "physics" | "nbody" | "quantum" | "qfie" | "neuroevolution" | "raytracer" | "generic";
+  mediaType?: "orderforge" | "physics" | "nbody" | "quantum" | "qfie" | "poker" | "neuroevolution" | "raytracer" | "generic";
   mediaLabel?: string;
 }
 const visualBySlug: Record<string, NonNullable<Props['mediaType']>> = {
+  'order-forge': 'orderforge',
   'q-fie': 'qfie',
+  'poker-decision-analytics': 'poker',
   'neuroevolution-sim': 'neuroevolution',
   'ray-tracer': 'raytracer',
   'physics2d': 'physics',

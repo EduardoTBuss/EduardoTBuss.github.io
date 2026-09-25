@@ -21,7 +21,7 @@ const publications = getPublicationsFor(project.publications);
 const { Content } = await render(page);
 ---
 <Base
-  title={`${project.title} — ${Astro.site ? 'Eduardo Timm Buss' : ''}`.trim()}
+  title={`${project.title} | ${Astro.site ? 'Eduardo Timm Buss' : ''}`.trim()}
   description={project.summary}
 >
   <article>
@@ -54,7 +54,7 @@ const { Content } = await render(page);
               : p.url
                 ? <a href={p.url} rel="noopener">{p.title}</a>
                 : <span>{p.title}</span>}
-            <span class="muted"> &mdash; {p.venue}, {p.year}</span>
+            <span class="muted">, {p.venue}, {p.year}</span>
           </li>
         ))}
       </ul>

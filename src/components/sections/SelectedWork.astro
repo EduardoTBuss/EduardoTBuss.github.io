@@ -1,7 +1,6 @@
 ---
 /**
- * Selected Work section featuring high-impact visual simulations
- * with media slots (physics2d, nbody, quantum) and secondary systems grid.
+ * Selected work with applied AI, research and systems featured first.
  */
 import Section from '../Section.astro';
 import HorizontalProjectDeck from '../HorizontalProjectDeck.astro';
@@ -12,19 +11,20 @@ const profile = getProfile();
 
 const featuredProjects = getFeaturedWork();
 const featuredSlugs = new Set(featuredProjects.map((project) => project.slug));
-const otherProjects = projects.filter((project) => !featuredSlugs.has(project.slug));
+const caseStudies = projects.filter((project) => project.has_page && !featuredSlugs.has(project.slug));
+const repositoryCatalog = projects.filter((project) => !project.has_page);
 
 ---
 
-<Section id="work" title="Featured Engineering & Selected Work">
+<Section id="work" title="Public projects">
   <div class="featured-column">
     <HorizontalProjectDeck projects={featuredProjects} />
 
-    {otherProjects.length > 0 && (
+    {caseStudies.length > 0 && (
       <div class="secondary-section">
-        <h3 class="secondary-heading">// Additional Systems & Analysis</h3>
+        <h3 class="secondary-heading">Detailed case studies</h3>
         <div class="secondary-grid">
-          {otherProjects.map((p) => (
+          {caseStudies.map((p) => (
             <div class="tech-card secondary-card">
               <div class="sec-card-header">
                 <h4 class="sec-title">{p.title}</h4>
@@ -55,9 +55,26 @@ const otherProjects = projects.filter((project) => !featuredSlugs.has(project.sl
       </div>
     )}
 
+    {repositoryCatalog.length > 0 && (
+      <div class="catalog-section">
+        <h3 class="secondary-heading">More public repositories</h3>
+        <p class="catalog-intro">Research code, applications, systems work and coursework with source available on GitHub.</p>
+        <div class="catalog-grid">
+          {repositoryCatalog.map((p) => (
+            <article class="catalog-card">
+              <div class="catalog-meta"><span>{p.category}</span><span>{p.year}</span></div>
+              <h4><a href={p.links.repo} rel="noopener">{p.title} ↗</a></h4>
+              <p>{p.tagline}</p>
+              <div class="catalog-tools">{p.languages.map((language) => <span>{language}</span>)}</div>
+            </article>
+          ))}
+        </div>
+      </div>
+    )}
+
     <p class="more-repos">
       <a href={`${profile.links.github}?tab=repositories`} rel="noopener" class="term-btn">
-        <span class="bracket">[</span>View all other repositories on GitHub &rarr;<span class="bracket">]</span>
+        <span class="bracket">[</span>Visit my GitHub profile &rarr;<span class="bracket">]</span>
       </a>
     </p>
   </div>
@@ -79,6 +96,58 @@ const otherProjects = projects.filter((project) => !featuredSlugs.has(project.sl
   .secondary-section {
     margin-top: var(--s4);
   }
+  .catalog-section {
+    margin-top: var(--s7);
+  }
+  .catalog-intro {
+    max-width: 42rem;
+    color: var(--fg-muted);
+    font-size: var(--fs-sm);
+    margin-bottom: var(--s5);
+  }
+  .catalog-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--s4);
+  }
+  .catalog-card {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    padding: var(--s5);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius-lg);
+    background: var(--bg-surface);
+  }
+  .catalog-meta {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--s3);
+    color: var(--fg-dim);
+    font: 0.68rem var(--font-mono);
+    text-transform: uppercase;
+  }
+  .catalog-card h4 {
+    margin: var(--s4) 0 var(--s2);
+    font-size: var(--fs-base);
+    overflow-wrap: anywhere;
+  }
+  .catalog-card p {
+    color: var(--fg-muted);
+    font-size: var(--fs-sm);
+    line-height: 1.5;
+  }
+  .catalog-tools {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s2);
+    margin-top: auto;
+    padding-top: var(--s3);
+  }
+  .catalog-tools span {
+    color: var(--fg-dim);
+    font: 0.68rem var(--font-mono);
+  }
 
   .secondary-heading {
     font-family: var(--font-mono);
@@ -95,7 +164,7 @@ const otherProjects = projects.filter((project) => !featuredSlugs.has(project.sl
   }
 
   @media (max-width: 800px) {
-    .secondary-grid {
+    .secondary-grid, .catalog-grid {
       grid-template-columns: 1fr;
     }
   }

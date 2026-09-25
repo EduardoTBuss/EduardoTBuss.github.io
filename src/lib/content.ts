@@ -109,7 +109,7 @@ export const getSelectedWork = (): (Project & {
     }));
 
 /** Editorial selection for the site. Keep profile pins independent of the homepage. */
-export const featuredSlugs = ['q-fie', 'neuroevolution-sim', 'ray-tracer'] as const;
+export const featuredSlugs = ['order-forge', 'q-fie', 'poker-decision-analytics'] as const;
 
 export const getFeaturedWork = (): Project[] =>
   featuredSlugs.map((slug) => {
@@ -120,11 +120,14 @@ export const getFeaturedWork = (): Project[] =>
     return project;
   });
 
-/** Featured projects first, followed by the profile's established selection. */
+/** Featured work first, then every public project in editorial order. */
 export const getPortfolioWork = (): Project[] => {
   const featured = getFeaturedWork();
   const featuredSet = new Set<string>(featuredSlugs);
-  return [...featured, ...getSelectedWork().filter((project) => !featuredSet.has(project.slug))];
+  const remaining = projects.items
+    .filter((project) => !featuredSet.has(project.slug))
+    .sort((a, b) => a.order - b.order);
+  return [...featured, ...remaining];
 };
 
 /** Every project that owns a page. Drives the [slug] route. */

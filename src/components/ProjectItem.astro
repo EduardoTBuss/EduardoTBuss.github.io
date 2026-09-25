@@ -25,7 +25,7 @@ const { project } = Astro.props;
     {project.href && <span aria-hidden="true"> &middot; </span>}
     <a href={project.links.repo} rel="noopener">Repository</a>
     {project.relatedPublications.map((p) => (
-      <Fragment><span aria-hidden="true"> &middot; </span><a href={`#pub-${p.id}`}>Paper: {p.venue}</a></Fragment>
+      <Fragment><span aria-hidden="true"> &middot; </span><a href={`/publications/#pub-${p.id}`}>Paper: {p.venue}</a></Fragment>
     ))}
   </Fragment>
 </ListItem>

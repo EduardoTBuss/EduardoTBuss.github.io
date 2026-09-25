@@ -108,6 +108,25 @@ export const getSelectedWork = (): (Project & {
       href: projectHref(p),
     }));
 
+/** Editorial selection for the site. Keep profile pins independent of the homepage. */
+export const featuredSlugs = ['q-fie', 'neuroevolution-sim', 'ray-tracer'] as const;
+
+export const getFeaturedWork = (): Project[] =>
+  featuredSlugs.map((slug) => {
+    const project = getProject(slug);
+    if (!project || !project.has_page) {
+      throw new Error(`Featured project "${slug}" needs a canonical entry and a case study`);
+    }
+    return project;
+  });
+
+/** Featured projects first, followed by the profile's established selection. */
+export const getPortfolioWork = (): Project[] => {
+  const featured = getFeaturedWork();
+  const featuredSet = new Set<string>(featuredSlugs);
+  return [...featured, ...getSelectedWork().filter((project) => !featuredSet.has(project.slug))];
+};
+
 /** Every project that owns a page. Drives the [slug] route. */
 export const getProjectsWithPages = (): Project[] =>
   projects.items.filter((p) => p.has_page).sort((a, b) => a.order - b.order);

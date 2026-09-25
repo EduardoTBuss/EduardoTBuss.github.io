@@ -3,7 +3,7 @@
   "type": "module",
   "version": "1.0.0",
   "private": true,
-  "description": "Personal site and portfolio of Eduardo Timm Buss. Static Astro build, zero client-side JavaScript.",
+  "description": "Personal site and portfolio of Eduardo Timm Buss. Static Astro portfolio with lightweight progressive interactions.",
   "engines": {
     "node": ">=22.12.0"
   },
@@ -13,8 +13,10 @@
     "build": "astro build",
     "preview": "astro preview",
     "check": "node scripts/check-project-pages.mjs && astro check",
+    "og": "python scripts/generate-og.py",
     "budget": "node scripts/check-budget.mjs",
-    "verify": "npm run sync:data && npm run check && npm run build && npm run budget"
+    "verify": "npm run sync:data && npm run check && npm run build && npm run budget && npm run check:links",
+    "check:links": "node scripts/check-links.mjs"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.4",

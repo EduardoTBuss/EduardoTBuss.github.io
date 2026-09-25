@@ -15,7 +15,7 @@ const projects = defineCollection({
       updated: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
       metrics: z
         .array(z.object({ label: z.string(), value: z.string() }))
-        .min(2, 'a project page must carry at least two measured numbers')
+        .min(2, 'a project page must carry at least two sourced numerical facts')
         .max(4),
       figure: z
         .object({ src: image(), alt: z.string(), caption: z.string() })

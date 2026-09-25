@@ -2,7 +2,10 @@
 /** The page shell: head, skip link, main, footer. Every route uses it. */
 import '../styles/tokens.css';
 import '../styles/base.css';
+import '../styles/animations.css';
+import HeaderNav from '../components/HeaderNav.astro';
 import Footer from '../components/Footer.astro';
+import InteractiveBackground from '../components/InteractiveBackground.astro';
 import { getProfile } from '../lib/content';
 
 interface Props {
@@ -22,7 +25,9 @@ const ogImage = new URL('/og.png', Astro.site).href;
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#090e16" />
     <title>{title}</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
     <meta name="author" content={profile.name} />
@@ -35,10 +40,12 @@ const ogImage = new URL('/og.png', Astro.site).href;
     <meta name="twitter:card" content="summary_large_image" />
 
     <link rel="sitemap" href="/sitemap-index.xml" />
-    {jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
+    {jsonLd && <script is:inline type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
   </head>
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
+    <InteractiveBackground />
+    <HeaderNav />
     <main id="main">
       <slot />
       <Footer />

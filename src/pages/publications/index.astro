@@ -1,0 +1,68 @@
+---
+/**
+ * Dedicated Publications & Research portal page (/publications/).
+ */
+import Base from '../../layouts/Base.astro';
+import Publications from '../../components/sections/Publications.astro';
+import Research from '../../components/sections/Research.astro';
+import { getProfile } from '../../lib/content';
+
+const profile = getProfile();
+---
+
+<Base
+  title={`Publications & Research — ${profile.name}`}
+  description="Peer-reviewed papers, conference proceedings and quantum-fuzzy research by Eduardo Timm Buss."
+>
+  <div class="page-container reveal-up">
+    <header class="page-header">
+      <span class="mono-tag page-eyebrow">// PEER-REVIEWED & PREPRINTS</span>
+      <h1>Research, in print.</h1>
+      <p class="page-desc">
+        Papers on quantum and fuzzy systems, machine learning and computer vision.
+        Related code is linked where available.
+      </p>
+    </header>
+
+    <div class="research-track scroll-reveal">
+      <Research />
+    </div>
+
+    <div class="publications-content scroll-reveal" style="margin-top: var(--space-section);">
+      <Publications />
+    </div>
+  </div>
+</Base>
+
+<style>
+  .page-container {
+    padding-top: var(--s7);
+    padding-bottom: var(--s8);
+  }
+
+  .page-header {
+    margin-bottom: var(--s7);
+    border-bottom: 1px solid var(--rule);
+    padding-bottom: var(--s6);
+  }
+
+  .page-eyebrow {
+    color: var(--accent);
+    margin-bottom: var(--s3);
+  }
+
+  h1 {
+    font-size: var(--fs-2xl);
+    letter-spacing: -0.02em;
+    color: var(--fg);
+    margin: var(--s2) 0 var(--s3) 0;
+  }
+
+  .page-desc {
+    font-size: var(--fs-base);
+    color: var(--fg-muted);
+    max-width: 42rem;
+    line-height: var(--lh-body);
+    margin: 0;
+  }
+</style>

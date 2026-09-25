@@ -1,0 +1,111 @@
+﻿---
+import { getResearch } from "../../lib/content";
+const research = getResearch();
+---
+
+<section class="research-overview" aria-labelledby="research-heading">
+  <div class="research-intro">
+    <span class="section-kicker">02 / THE THREAD THAT CONNECTS IT ALL</span><h2
+      id="research-heading"
+    >
+      Curiosity.<br />With a <em>test bench.</em>
+    </h2><p>
+      I study Computer Engineering at UFPel, exploring quantum computing and
+      fuzzy logic with Q-Flex, and deep learning and computer vision with
+      ViTech.
+    </p><a href="/cv/" class="button-text">More about my background ↗</a>
+  </div>
+  <div class="research-tracks">
+    {
+      research.map((item, index) => (
+        <a class="research-track" href="/publications/">
+          <>
+            <span class="track-number">0{index + 1}</span>
+            <div>
+              <>
+                <h3>{item.title}</h3>
+                <p>{item.detail}</p>
+              </>
+            </div>
+            <span class="track-arrow" aria-hidden="true">
+              ↗
+            </span>
+          </>
+        </a>
+      ))
+    }
+  </div>
+</section>
+<style>
+  .research-overview {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--s9);
+    padding-block: var(--s8);
+    border-block: 1px solid var(--rule);
+  }
+  h2 {
+    font-size: clamp(2.7rem, 4.5vw, 4rem);
+    letter-spacing: -0.06em;
+    font-weight: 500;
+    line-height: 1.08;
+  }
+  em {
+    font-style: normal;
+    color: var(--accent);
+  }
+  .research-intro > p {
+    color: var(--fg-muted);
+    font-size: 0.9rem;
+    line-height: 1.8;
+    margin-block: var(--s5);
+    max-width: 28rem;
+  }
+  .research-tracks {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .research-track {
+    display: flex;
+    align-items: baseline;
+    gap: var(--s5);
+    padding: var(--s6) 0;
+    border-bottom: 1px solid var(--rule);
+    color: var(--fg);
+  }
+  .research-track:first-child {
+    border-top: 1px solid var(--rule);
+  }
+  .research-track:hover {
+    text-decoration: none;
+  }
+  .track-number {
+    font: 0.6rem var(--font-mono);
+    color: var(--accent);
+  }
+  h3 {
+    font-size: 1.1rem;
+    font-weight: 500;
+  }
+  .research-track p {
+    font-size: 0.8rem;
+    line-height: 1.7;
+    color: var(--fg-muted);
+    margin-top: var(--s2);
+  }
+  .track-arrow {
+    margin-left: auto;
+    color: var(--accent);
+    transition: transform 0.2s;
+  }
+  .research-track:hover .track-arrow {
+    transform: translate(3px, -3px);
+  }
+  @media (max-width: 760px) {
+    .research-overview {
+      grid-template-columns: 1fr;
+      gap: var(--s6);
+    }
+  }
+</style>

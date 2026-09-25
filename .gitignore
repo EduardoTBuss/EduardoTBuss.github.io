@@ -5,3 +5,4 @@ dist/
 # there is exactly one writer per data file, and it is not this repository.
 src/data/
 .DS_Store
+artifacts/

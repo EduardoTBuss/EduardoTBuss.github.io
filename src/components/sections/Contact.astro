@@ -1,29 +1,78 @@
----
-import Section from '../Section.astro';
-import { getProfile } from '../../lib/content';
+﻿---
+import { getProfile } from "../../lib/content";
 const p = getProfile();
-const email = p.links.academic_email.replace('mailto:', '');
 ---
-<Section id="contact" title="Contact">
-  <p>
-    The fastest way to reach me is email. I read messages about research
-    collaboration, graduate positions and anything on this page.
-  </p>
-  <dl>
-    <dt>Email</dt>
-    <dd><a href={p.links.academic_email}>{email}</a></dd>
-    <dt>GitHub</dt>
-    <dd><a href={p.links.github} rel="noopener">{p.username}</a></dd>
-    <dt>LinkedIn</dt>
-    <dd><a href={p.links.linkedin} rel="noopener">eduardotimmbuss</a></dd>
-    <dt>ORCID</dt>
-    <dd><a href={p.links.orcid} rel="noopener">0009-0007-6356-5438</a></dd>
-  </dl>
-</Section>
 
+<section class="contact-section" id="contact" aria-labelledby="contact-heading">
+  <div>
+    <span class="section-kicker">04 / OPEN A CONVERSATION</span><h2
+      id="contact-heading"
+    >
+      Good ideas start<br />with <em>a conversation.</em>
+    </h2><p>
+      Research collaborations, graduate opportunities, or a question about
+      something I've built.
+    </p>
+  </div>
+  <div class="contact-actions">
+    <a class="button-primary" href={p.links.academic_email}>Get in touch ↗</a><a
+      class="email"
+      href={p.links.academic_email}
+      >{p.links.academic_email.replace("mailto:", "")}</a
+    ><nav aria-label="Academic and social profiles">
+      <a href={p.links.github}>GitHub ↗</a><a href={p.links.linkedin}
+        >LinkedIn ↗</a
+      ><a href={p.links.orcid}>ORCID ↗</a>
+    </nav>
+  </div>
+</section>
 <style>
-  dl { margin: 0; }
-  dt { font-weight: 600; margin-top: var(--s4); font-size: var(--fs-sm); color: var(--fg-muted); }
-  dt:first-child { margin-top: 0; }
-  dd { margin: var(--s1) 0 0; }
+  .contact-section {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: var(--s7);
+    padding: var(--s8) 0;
+    border-top: 1px solid var(--rule);
+    margin-top: var(--space-section);
+  }
+  h2 {
+    font-size: clamp(2.5rem, 4vw, 3.6rem);
+    font-weight: 500;
+    letter-spacing: -0.055em;
+    line-height: 1.15;
+  }
+  em {
+    font-style: normal;
+    color: var(--accent);
+  }
+  p {
+    font-size: 0.85rem;
+    color: var(--fg-muted);
+    max-width: 27rem;
+    margin-top: var(--s5);
+  }
+  .contact-actions {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    flex-direction: column;
+    gap: var(--s5);
+  }
+  .email {
+    font-size: 0.85rem;
+    color: var(--fg-muted);
+  }
+  nav {
+    display: flex;
+    gap: var(--s5);
+    font: 0.65rem var(--font-mono);
+  }
+  nav a {
+    color: var(--fg-muted);
+  }
+  @media (max-width: 760px) {
+    .contact-section {
+      grid-template-columns: 1fr;
+    }
+  }
 </style>

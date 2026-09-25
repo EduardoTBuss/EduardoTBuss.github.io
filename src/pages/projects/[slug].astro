@@ -25,7 +25,7 @@ const { Content } = await render(page);
   description={project.summary}
 >
   <article>
-    <p class="back"><a href="/#work">Selected work</a></p>
+    <p class="back"><a href="/projects/">Selected work</a></p>
 
     <h1>{project.title}</h1>
     <p class="tagline">{project.tagline}</p>
@@ -34,7 +34,7 @@ const { Content } = await render(page);
     </p>
 
     <section aria-labelledby="metrics-heading" class="metrics">
-      <h2 id="metrics-heading">Measured</h2>
+      <h2 id="metrics-heading">At a glance</h2>
       <Metrics metrics={page.data.metrics} />
     </section>
 
@@ -65,9 +65,9 @@ const { Content } = await render(page);
 </Base>
 
 <style>
-  article { padding-top: var(--s7); }
+  article { padding-top: var(--s7); max-width: 54rem; margin-inline:auto; }
   .back { font-size: var(--fs-sm); margin-bottom: var(--s5); }
-  h1 { margin-top: 0; }
+  h1 { margin-top: 0; font-size:var(--fs-2xl); overflow-wrap:anywhere; letter-spacing:-.04em; }
   .tagline { margin-top: var(--s3); color: var(--fg-muted); }
   .meta { margin-top: var(--s3); }
   .metrics { margin-top: var(--space-section); }

@@ -1,0 +1,486 @@
+---
+/** Concept art, never presented as executable simulation or measured evidence. */
+interface Props {
+  kind:
+    | "physics"
+    | "nbody"
+    | "quantum"
+    | "qfie"
+    | "neuroevolution"
+    | "raytracer"
+    | "generic";
+}
+const { kind } = Astro.props;
+const labels = {
+  physics: ["01 / DYNAMICS", "Order from collision."],
+  nbody: ["02 / GRAVITATION", "Everything is connected."],
+  quantum: ["03 / INTERFERENCE", "Beyond the classical."],
+  qfie: ["QUANTUM / FUZZY INFERENCE", "States, rules, inference."],
+  neuroevolution: ["NEUROEVOLUTION / SEARCH", "Learning through exploration."],
+  raytracer: ["RAY TRACING / LIGHT", "Following light through code."],
+  generic: ["RESEARCH / BUILD", "Ideas made tangible."],
+};
+const label = labels[kind] ?? labels.generic;
+---
+
+<div class:list={["project-visual", kind]}>
+  <div class="heading">
+    <span>{label[0]}</span><span aria-hidden="true">✳</span>
+  </div>
+  <div class="art" aria-hidden="true">
+    {
+      kind === "nbody" ? (
+        <div class="universe">
+          <>
+            <div class="orbit one">
+              <i />
+            </div>
+            <div class="orbit two">
+              <i />
+            </div>
+            <div class="orbit three">
+              <i />
+            </div>
+            <div class="star" />
+          </>
+        </div>
+      ) : kind === "physics" ? (
+        <div class="block-world">
+          <div class="floor" />
+          {[0, 1, 2, 3, 4].map((n) => (
+            <div class="block" style={`--i:${n}`}>
+              <span />
+              <i />
+            </div>
+          ))}
+          <div class="force">
+            ↑<small>F</small>
+          </div>
+        </div>
+      ) : kind === "quantum" || kind === "qfie" ? (
+        <svg viewBox="0 0 500 400" class="quantum-art">
+          <defs>
+            <radialGradient id="bloch-fill" cx="40%" cy="34%" r="72%">
+              <stop offset="0" stop-color="#4eb8e3" stop-opacity="0.3" />
+              <stop offset="0.55" stop-color="#224f79" stop-opacity="0.14" />
+              <stop offset="1" stop-color="#163455" stop-opacity="0.02" />
+            </radialGradient>
+            <linearGradient id="state-vector" x1="0" y1="1" x2="1" y2="0">
+              <stop offset="0" stop-color="#76d8f6" />
+              <stop offset="1" stop-color="#b0b8ff" />
+            </linearGradient>
+            <marker id="vector-head" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+              <path d="M0 0L8 4 0 8Z" fill="#b0b8ff" />
+            </marker>
+          </defs>
+          <g class="bloch-axis">
+            <path d="M250 333V34M94 242L406 127M105 127L397 251" />
+            <text x="255" y="29">z</text>
+            <text x="408" y="126">x</text>
+            <text x="398" y="262">y</text>
+            <text x="261" y="61">|0⟩</text>
+            <text x="261" y="316">|1⟩</text>
+          </g>
+          <g class="sphere">
+            <circle class="sphere-shell" cx="250" cy="180" r="121" />
+            <path class="sphere-dashed" d="M129 180A121 44 0 0 1 371 180" />
+            <path d="M129 180A121 44 0 0 0 371 180" />
+            <ellipse cx="250" cy="180" rx="49" ry="121" />
+            <path class="sphere-dashed" d="M250 59A84 121 0 0 1 250 301" />
+            <circle class="state-origin" cx="250" cy="180" r="4" />
+            <path class="state-vector" d="M250 180L320 84" marker-end="url(#vector-head)" />
+            <circle class="state-point" cx="320" cy="84" r="5" />
+            <text class="state-label" x="330" y="80">|ψ⟩</text>
+          </g>
+          {kind === "qfie" && (
+            <g class="fuzzy-curves">
+              <path d="M90 358Q155 358 194 324Q233 358 274 358" />
+              <path d="M204 358Q278 358 320 324Q359 358 419 358" />
+              <path class="fuzzy-baseline" d="M90 358H419" />
+              <text x="90" y="378">μ(x)</text>
+            </g>
+          )}
+        </svg>
+      ) : kind === "neuroevolution" ? (
+        <svg viewBox="0 0 500 360" class="network-art">
+          <g class="network-links">
+            <path d="M80 76L242 60 407 91M80 76L242 166 407 91M80 76L242 270 407 267" />
+            <path d="M80 178L242 60 407 267M80 178L242 166 407 91M80 178L242 270 407 267" />
+            <path d="M80 280L242 60 407 91M80 280L242 166 407 267M80 280L242 270 407 91" />
+          </g>
+          <g class="network-nodes">
+            {[76, 178, 280].map((y) => <circle cx="80" cy={y} r="10" />)}
+            {[60, 166, 270].map((y) => <circle cx="242" cy={y} r="13" />)}
+            {[91, 267].map((y) => <circle cx="407" cy={y} r="15" />)}
+          </g>
+          <path class="network-selection" d="M80 178L242 166 407 91" />
+          <g class="network-labels">
+            <text x="59" y="334">INPUT</text><text x="213" y="334">HIDDEN</text><text x="385" y="334">OUTPUT</text>
+          </g>
+        </svg>
+      ) : kind === "raytracer" ? (
+        <svg viewBox="0 0 500 360" class="ray-art">
+          <defs>
+            <radialGradient id="ray-sphere" cx="32%" cy="26%" r="72%">
+              <stop offset="0" stop-color="#e2f7ff" />
+              <stop offset="0.23" stop-color="#7dd5f5" />
+              <stop offset="0.68" stop-color="#2a628d" />
+              <stop offset="1" stop-color="#101b32" />
+            </radialGradient>
+          </defs>
+          <g class="ray-grid">
+            <path d="M20 292H480M73 320H427M134 345H366M250 250V360M250 250L85 360M250 250L415 360M250 250L-40 360M250 250L540 360" />
+          </g>
+          <ellipse class="ray-shadow" cx="268" cy="293" rx="99" ry="22" />
+          <circle class="ray-sphere" cx="268" cy="174" r="101" />
+          <g class="ray-paths">
+            <path d="M68 37L196 105M68 37L230 81M68 37L275 73" />
+            <path d="M196 105L87 198M230 81L141 194M275 73L344 26" />
+          </g>
+          <circle class="ray-light" cx="68" cy="37" r="7" />
+        </svg>
+      ) : (
+        <svg viewBox="0 0 500 360" class="generic-art">
+          <path d="M66 278L180 78H344L434 278Z" />
+          <path d="M66 278H434M180 78L250 278 344 78" />
+          <circle cx="250" cy="178" r="45" />
+          <path d="M250 98V58M250 298v-40M129 178H89M411 178h-40" />
+        </svg>
+      )
+    }
+  </div>
+  <div class="caption">
+    <p>{label[1]}</p><span
+      >Concept illustration · not a live simulation</span>
+  </div>
+</div>
+<style>
+  .project-visual {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    isolation: isolate;
+    min-height: 440px;
+    padding: 30px;
+    overflow: hidden;
+    background:
+      radial-gradient(
+        ellipse at 50% 43%,
+        color-mix(in srgb, var(--accent) 12%, transparent),
+        transparent 62%
+      ),
+      #0e1724;
+    color: var(--accent);
+    border-right: 1px solid var(--rule);
+  }
+  .project-visual:before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(#ffffff05 1px, transparent 1px),
+      linear-gradient(90deg, #ffffff05 1px, transparent 1px);
+    background-size: 36px 36px;
+    mask-image: linear-gradient(transparent, #000 30%, #000 70%, transparent);
+    z-index: -1;
+  }
+  .heading {
+    display: flex;
+    justify-content: space-between;
+    font: 10px var(--font-mono);
+    letter-spacing: 0.12em;
+  }
+  .heading > span:last-child {
+    font-size: 26px;
+  }
+  .caption {
+    position: relative;
+    z-index: 1;
+  }
+  .caption p {
+    font-size: clamp(22px, 2.5vw, 32px);
+    font-weight: 500;
+    letter-spacing: -0.04em;
+    margin: 0 0 12px;
+    color: var(--fg);
+  }
+  .caption > span {
+    font: 9px var(--font-mono);
+    color: var(--fg-muted);
+  }
+  .art {
+    position: absolute;
+    inset: 45px 0 80px;
+    display: grid;
+    place-items: center;
+  }
+  .universe {
+    width: 330px;
+    height: 330px;
+    position: relative;
+    transform: rotate(-24deg);
+  }
+  .orbit {
+    position: absolute;
+    border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent);
+    border-radius: 50%;
+    inset: 12%;
+    animation: orbit-spin 24s linear infinite;
+  }
+  .two {
+    inset: 1%;
+    animation-duration: 38s;
+  }
+  .three {
+    inset: 25%;
+    animation-duration: 15s;
+  }
+  .orbit i {
+    position: absolute;
+    width: 13px;
+    height: 13px;
+    border-radius: 50%;
+    background: var(--accent);
+    left: 48%;
+    top: -7px;
+    box-shadow: 0 0 20px color-mix(in srgb, var(--accent) 60%, transparent);
+  }
+  .two i {
+    width: 7px;
+    height: 7px;
+    top: -4px;
+  }
+  .star {
+    position: absolute;
+    inset: 43%;
+    border-radius: 50%;
+    background: #d8f6ff;
+    box-shadow:
+      0 0 35px #b5eaff88,
+      0 0 100px #67bdf444;
+  }
+  .block-world {
+    position: relative;
+    width: 320px;
+    height: 330px;
+    transform: rotate(-12deg);
+  }
+  .floor {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 18px;
+    height: 100px;
+    border: 1px solid #a6dfff2a;
+    transform: skewY(-18deg);
+    background: linear-gradient(110deg, #9bd6ff0a, transparent);
+  }
+  .block {
+    position: absolute;
+    width: 72px;
+    height: 72px;
+    bottom: calc(42px + var(--i) * 43px);
+    left: calc(115px + var(--i) * 3px);
+    border: 1px solid var(--accent);
+    background: linear-gradient(130deg, #9bd6ff40, #4a86b40a);
+    transform: skewY(-18deg);
+    box-shadow: 12px 12px 35px #0003;
+    animation: block-drift 7s ease-in-out infinite;
+    animation-delay: calc(var(--i) * -0.8s);
+  }
+  .block span {
+    position: absolute;
+    top: -16px;
+    left: 7px;
+    width: 100%;
+    height: 14px;
+    border: 1px solid var(--accent);
+    transform: skewX(-45deg);
+    background: #9bd6ff2b;
+  }
+  .block i {
+    position: absolute;
+    right: -16px;
+    top: -8px;
+    width: 14px;
+    height: 100%;
+    border: 1px solid var(--accent);
+    transform: skewY(-45deg);
+    background: #9bd6ff10;
+  }
+  .force {
+    position: absolute;
+    right: 40px;
+    top: 100px;
+    font-size: 55px;
+    font-weight: 200;
+  }
+  .force small {
+    font: 11px var(--font-mono);
+  }
+  .art svg {
+    width: 100%;
+    height: 100%;
+    max-width: 500px;
+    overflow: visible;
+  }
+  .bloch-axis {
+    fill: none;
+    stroke: #87b5d1;
+    stroke-width: 1;
+    stroke-dasharray: 3 6;
+    opacity: 0.5;
+  }
+  .bloch-axis text {
+    stroke: none;
+    fill: #c8eaf8;
+    font: 13px var(--font-mono);
+    opacity: 0.95;
+  }
+  .sphere {
+    fill: none;
+    stroke: var(--accent);
+    stroke-width: 1.25;
+    opacity: 0.84;
+    transform-origin: 250px 180px;
+    animation: sphere-breathe 10s ease-in-out infinite;
+  }
+  .sphere-shell {
+    fill: url(#bloch-fill);
+    stroke-width: 1.7;
+  }
+  .sphere-dashed {
+    stroke-dasharray: 4 5;
+    opacity: 0.43;
+  }
+  .state-vector {
+    stroke: url(#state-vector);
+    stroke-width: 3;
+  }
+  .state-origin,
+  .state-point {
+    stroke: none;
+    fill: #b8eaff;
+  }
+  .state-point {
+    filter: drop-shadow(0 0 8px #90dfff);
+  }
+  .state-label {
+    stroke: none;
+    fill: #c9eefa;
+    font: 16px var(--font-mono);
+  }
+  .fuzzy-curves {
+    fill: none;
+    stroke: var(--accent-indigo);
+    stroke-width: 2;
+    opacity: 0.72;
+  }
+  .fuzzy-baseline {
+    stroke: var(--rule-bright);
+    stroke-width: 1;
+  }
+  .fuzzy-curves text {
+    stroke: none;
+    fill: var(--fg-muted);
+    font: 11px var(--font-mono);
+  }
+  .network-links {
+    fill: none;
+    stroke: var(--rule-bright);
+    stroke-width: 1.25;
+    opacity: 0.76;
+  }
+  .network-nodes {
+    fill: var(--bg-surface);
+    stroke: var(--accent);
+    stroke-width: 2;
+    filter: drop-shadow(0 0 9px var(--accent-glow));
+  }
+  .network-selection {
+    fill: none;
+    stroke: var(--accent-indigo);
+    stroke-width: 3;
+    filter: drop-shadow(0 0 6px #9ba8ff77);
+  }
+  .network-labels {
+    fill: var(--fg-muted);
+    font: 11px var(--font-mono);
+    letter-spacing: 0.1em;
+  }
+  .ray-grid {
+    fill: none;
+    stroke: var(--rule-bright);
+    stroke-width: 1;
+    opacity: 0.55;
+  }
+  .ray-shadow {
+    fill: #050b14;
+    opacity: 0.8;
+  }
+  .ray-sphere {
+    fill: url(#ray-sphere);
+    stroke: #b5e9fa;
+    stroke-width: 1;
+  }
+  .ray-paths {
+    fill: none;
+    stroke: #c1eaff;
+    stroke-width: 1.5;
+    opacity: 0.8;
+  }
+  .ray-light {
+    fill: #effaff;
+    filter: drop-shadow(0 0 12px #9edfff);
+  }
+  .generic-art {
+    fill: none;
+    stroke: var(--accent);
+    stroke-width: 1.5;
+    opacity: 0.65;
+  }
+  @keyframes orbit-spin {
+    to {
+      rotate: 360deg;
+    }
+  }
+  @keyframes block-drift {
+    50% {
+      translate: 0 -9px;
+    }
+  }
+  @keyframes sphere-breathe {
+    50% {
+      opacity: 1;
+      transform: scale(1.015);
+    }
+  }
+  :global(html[data-motion="paused"]) .orbit,
+  :global(html[data-motion="paused"]) .block,
+  :global(html[data-motion="paused"]) .sphere {
+    animation-play-state: paused;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .orbit,
+    .block,
+    .sphere {
+      animation: none;
+    }
+  }
+  @media (max-width: 760px) {
+    .project-visual {
+      min-height: 350px;
+      border-right: 0;
+      border-bottom: 1px solid var(--rule);
+      padding: 24px;
+    }
+    .art {
+      inset: 25px 0 70px;
+      transform: scale(0.8);
+    }
+    .caption p {
+      font-size: 25px;
+    }
+  }
+</style>

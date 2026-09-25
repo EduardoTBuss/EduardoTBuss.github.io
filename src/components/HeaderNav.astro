@@ -1,0 +1,141 @@
+﻿---
+const links = [
+  { href: "/", label: "Overview" },
+  { href: "/projects/", label: "Projects" },
+  { href: "/publications/", label: "Research" },
+  { href: "/cv/", label: "About & CV" },
+];
+const active = (href: string) =>
+  href === "/"
+    ? Astro.url.pathname === "/"
+    : Astro.url.pathname.startsWith(href);
+---
+
+<header class="navbar-sticky">
+  <div class="nav-content">
+    <a href="/" class="nav-brand" aria-label="Eduardo Timm Buss home"
+      ><span class="brand-symbol" aria-hidden="true">e<span>↗</span></span><span
+        >EDUARDO TIMM BUSS<small>ENGINEERING / RESEARCH</small></span
+      ></a
+    >
+    <nav aria-label="Main navigation">
+      {
+        links.map((link) => (
+          <a
+            href={link.href}
+            aria-current={active(link.href) ? "page" : undefined}
+          >
+            {link.label}
+          </a>
+        ))
+      }
+    </nav>
+    <a class="nav-contact" href="/#contact"
+      >Let's connect <span aria-hidden="true">↗</span></a
+    >
+  </div>
+</header>
+<style>
+  .navbar-sticky {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter: blur(18px);
+    border-bottom: 1px solid var(--rule);
+  }
+  .nav-content {
+    max-width: var(--measure);
+    margin: auto;
+    padding: 0 var(--gutter);
+    min-height: 76px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--s5);
+  }
+  .nav-brand {
+    display: flex;
+    gap: var(--s3);
+    align-items: center;
+    color: var(--fg);
+    font: 600 0.61rem var(--font-mono);
+    letter-spacing: 0.08em;
+  }
+  .nav-brand:hover {
+    text-decoration: none;
+  }
+  .nav-brand small {
+    display: block;
+    font-size: 0.48rem;
+    color: var(--fg-muted);
+    margin-top: 5px;
+    letter-spacing: 0.1em;
+  }
+  .brand-symbol {
+    font: italic 2.7rem var(--font-sans);
+    letter-spacing: -0.2em;
+    color: var(--accent);
+    margin-right: 6px;
+  }
+  .brand-symbol span {
+    font-size: 1.6rem;
+  }
+  nav {
+    display: flex;
+    gap: var(--s6);
+  }
+  nav a {
+    font-size: 0.85rem;
+    color: var(--fg-muted);
+    padding: var(--s3) 0;
+  }
+  nav a[aria-current] {
+    color: var(--accent);
+  }
+  .nav-contact {
+    border: 1px solid var(--rule-bright);
+    border-radius: 3px;
+    padding: 11px 16px;
+    font-size: 0.85rem;
+    color: var(--fg);
+  }
+  .nav-contact span {
+    margin-left: var(--s5);
+  }
+  @media (max-width: 780px) {
+    .nav-contact {
+      display: none;
+    }
+    .nav-content {
+      gap: var(--s3);
+    }
+    nav {
+      gap: var(--s4);
+    }
+  }
+  @media (max-width: 520px) {
+    .nav-content {
+      flex-wrap: wrap;
+      padding-block: var(--s3);
+      gap: var(--s2);
+    }
+    .nav-brand {
+      font-size: 0.55rem;
+    }
+    nav {
+      width: 100%;
+      justify-content: space-between;
+    }
+    nav a {
+      font-size: 0.72rem;
+      padding-block: var(--s2);
+    }
+    .brand-symbol {
+      font-size: 1.8rem;
+    }
+    .nav-brand small {
+      display: none;
+    }
+  }
+</style>

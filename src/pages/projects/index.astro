@@ -1,0 +1,63 @@
+---
+/**
+ * Dedicated Projects & Simulations showcase page (/projects/).
+ */
+import Base from '../../layouts/Base.astro';
+import SelectedWork from '../../components/sections/SelectedWork.astro';
+import { getProfile } from '../../lib/content';
+
+const profile = getProfile();
+---
+
+<Base
+  title={`Projects & Simulations — ${profile.name}`}
+  description="Experimental simulators, physics engines, quantum circuits and backend systems by Eduardo Timm Buss."
+>
+  <div class="page-container reveal-up">
+    <header class="page-header">
+      <span class="mono-tag page-eyebrow">// LAB IMPLEMENTATIONS & SIMULATIONS</span>
+      <h1>Projects you can inspect.</h1>
+      <p class="page-desc">
+        Quantum research, simulations, graphics and systems. Open a case study for
+        the design choices, evidence and limits behind each project.
+      </p>
+    </header>
+
+    <div class="projects-content scroll-reveal">
+      <SelectedWork />
+    </div>
+  </div>
+</Base>
+
+<style>
+  .page-container {
+    padding-top: var(--s7);
+    padding-bottom: var(--s8);
+  }
+
+  .page-header {
+    margin-bottom: var(--s7);
+    border-bottom: 1px solid var(--rule);
+    padding-bottom: var(--s6);
+  }
+
+  .page-eyebrow {
+    color: var(--accent);
+    margin-bottom: var(--s3);
+  }
+
+  h1 {
+    font-size: var(--fs-2xl);
+    letter-spacing: -0.02em;
+    color: var(--fg);
+    margin: var(--s2) 0 var(--s3) 0;
+  }
+
+  .page-desc {
+    font-size: var(--fs-base);
+    color: var(--fg-muted);
+    max-width: 42rem;
+    line-height: var(--lh-body);
+    margin: 0;
+  }
+</style>

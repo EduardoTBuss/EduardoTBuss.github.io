@@ -1,82 +1,93 @@
-# eduardotbuss.github.io
+﻿# Eduardo Timm Buss — personal site
 
-Personal site and portfolio of Eduardo Timm Buss. Static Astro build, no client-side
-JavaScript, one column, under 100 KB per page.
+A modular Astro portfolio for research and engineering, with an immersive dark visual direction, a responsive project deck, and a lightweight interactive background. Pages render as static HTML for GitHub Pages; client JavaScript adds motion and interaction progressively.
 
-Live at <https://eduardotbuss.github.io>.
+Live: <https://eduardotbuss.github.io>.
 
-## Running it
+## Run locally
 
-The content is **not** in this repository. The canonical JSON lives in
-[EduardoTBuss/EduardoTBuss](https://github.com/EduardoTBuss/EduardoTBuss) under `data/`,
-and is copied in at build time so there is exactly one writer per file. Clone that
-repository next to this one:
+Use Node 22.12 or newer. Canonical profile, publication, CV, and project JSON lives in the sibling [EduardoTBuss repository](https://github.com/EduardoTBuss/EduardoTBuss), under `data/`:
 
-```
+```text
 repositorio/
-  EduardoTBuss/            <- the data
-  EduardoTBuss.github.io/  <- this repository
+  EduardoTBuss/
+  EduardoTBuss.github.io/
 ```
-
-Then:
 
 ```bash
 npm install
-npm run dev       # syncs the data, then starts the dev server
-npm run verify    # sync, validate, build, enforce the weight budget
+npm run dev       # synchronizes canonical data, then starts Astro
+npm run verify    # sync + content validation + Astro checks + build + budget + links
+npm run preview   # previews the built site
 ```
 
-Set `DATA_SOURCE` to override where the JSON is read from.
+Set `DATA_SOURCE` to use another canonical data directory. `npm run build` alone does not synchronize data; use `verify` for a complete validation.
 
-## Where do I change...
+## Change the site
 
-| I want to change | Edit |
+| Change | Location |
 |---|---|
-| the accent colour, a font size, the column width, any spacing | `src/styles/tokens.css` — nothing else hardcodes a visual value |
-| the order of the home page sections, or drop one | `src/pages/index.astro` — it is a list of components, one line each |
-| the wording of a section | `src/components/sections/<Name>.astro` |
-| the prose of a project page | `src/content/projects/<slug>.md` |
-| a project's title, tagline, links, languages, order, or which papers it backs | `data/projects.json` **in the other repository** |
-| a publication | `data/publications.json` **in the other repository** |
-| the CV, the Now lines, the bio | `data/cv.json`, `data/now.json`, `data/profile.json` **in the other repository** |
-| where the data is read from | `src/lib/content.ts` — no component imports JSON directly |
-| the custom domain | `docs/DOMAIN.md` |
+| Palette, type scale, spacing | `src/styles/tokens.css` |
+| Shared layout and typography | `src/styles/base.css`, `src/layouts/Base.astro` |
+| Shared motion rules | `src/styles/animations.css` |
+| Background rendering and pointer response | `src/components/InteractiveBackground.astro`, `src/scripts/interactive-background.ts` |
+| Hero copy and calls to action | `src/components/sections/Hero.astro` |
+| Horizontal project deck | `src/components/HorizontalProjectDeck.astro`, `src/scripts/project-deck.ts` |
+| Pointer card illumination | `src/scripts/card-spotlight.ts` |
+| Home composition | `src/pages/index.astro` |
+| Individual home sections | `src/components/sections/` |
+| Publication disclosure and topic notes | `src/components/PublicationCard.astro` |
+| Project prose | `src/content/projects/<slug>.md` |
+| Profile, project metadata, publication status, CV | `data/*.json` in the canonical sibling repository |
+| Homepage featured projects | `featuredSlugs` in `src/lib/content.ts` |
+| Validated content gateway | `src/lib/content.ts`, `src/lib/schemas.ts` |
+| Domain configuration | `docs/DOMAIN.md` |
 
-## Adding a project
+Components access canonical data through the content gateway. Synced files under `src/data/` are ignored by Git; edit their source, not the generated copies. Publication topic notes are editorial descriptions based on canonical titles, clearly labeled as such; they must not invent experimental results or stand in for a paper abstract.
 
-1. Add an entry to `data/projects.json` in the other repository. Set `pinned` and
-   `has_page` to `true`, give it an `order`, and list the ids of any papers it backs.
-2. Create `src/content/projects/<slug>.md` here, with `project: <slug>` in the frontmatter
-   and between two and four measured `metrics`.
-3. The body must carry these seven headings, in this order: Problem, Approach, Architecture
-   (exactly one paragraph), Measured results, Engineering decisions, Limitations, Links.
+The three homepage features are selected in `featuredSlugs` in `src/lib/content.ts`. This site selection is independent of `pinned`, which controls the stable project list in the GitHub profile README.
 
-`npm run check` fails the build if any of that is wrong. That is the point: six pages that
-share a shape read as a collection, six pages that each invent their own read as six loose
-essays.
+## Motion and accessibility
 
-## Constraints this repository holds itself to
+The canvas is decorative and does not carry page content. Motion respects `prefers-reduced-motion`; the background controller pauses work when the document is hidden. Native links and publication `<details>` disclosures work without JavaScript and are usable by keyboard and touch. The project deck retains native scrolling. Keep visible focus states, touch targets, and reduced-motion behavior when adding interactions.
 
-- Zero client-side JavaScript. `npm run budget` fails if a single `.js` file reaches `dist`.
-- Under 100 KB per route, uncompressed, including assets. Enforced, not hoped for.
-- One accent colour, one type family, no webfonts, no emoji, no badges, no cards, no
-  animation.
-- Light and dark through `prefers-color-scheme` only; a theme toggle would need JavaScript.
-- Every number quoted on a project page is measured and appears in that project's own
-  repository or notes.
+## Build budgets
 
-## Layout
+`npm run budget` checks the existing `dist/` output:
 
-```
+- At most **150 KB uncompressed per route**, including HTML and recursively referenced local assets.
+- At most **30 KB uncompressed JavaScript across all of `dist/`**, including deduplicated executable inline scripts.
+- Local stylesheet URLs, ESM imports, dynamic imports, and `new URL()` asset references are traversed and deduplicated per route.
+- Missing referenced assets fail the check. External URLs and embedded data URLs are excluded; embedded bytes already count in the parent file.
+
+The dependency scanner covers literal references emitted by the build. If an interaction computes an asset URL at runtime, extend the checker or use a literal import so the asset is accounted for. Keep this check dependency-free.
+
+## Add a project
+
+1. Add canonical metadata to `data/projects.json` in the sibling repository. Set `pinned`, `has_page`, `order`, and related publication IDs as appropriate.
+2. Create `src/content/projects/<slug>.md` with `project: <slug>` in its frontmatter and two to four sourced numerical facts. Label configuration values as such; never present them as performance results.
+3. Use the required headings, in order: Problem, Approach, Architecture, Measured results, Engineering decisions, Limitations, Links. Architecture contains exactly one paragraph.
+4. Run `npm run verify`. Numerical claims must be traceable to that project's repository or research notes.
+
+## Structure
+
+```text
 src/
-  data/          synced from the other repository, gitignored
-  lib/
-    schemas.ts   the data contract, as Zod
-    content.ts   the only door between the data and the pages
-  styles/        tokens.css (every visual decision) and base.css
-  layouts/       the page shell
-  components/    primitives, plus one component per home page section
-  content/       the prose of the six project pages
-  pages/         index, 404, and the [slug] route for projects
-scripts/         sync-data, check-project-pages, check-budget
+  data/          generated canonical JSON copies
+  lib/           schema validation and content gateway
+  styles/        design tokens, layout, and motion
+  scripts/       small browser interaction modules
+  layouts/       shared document shell
+  components/    reusable primitives and home sections
+  content/       project prose
+  pages/         home, projects, publications, CV, and 404
+scripts/         data sync, project validation, and build budget checks
 ```
+
+Project decisions and debugging checkpoints are recorded in Eduardo's Brain (`site-pessoal-portfolio`); keep that record current when changing architecture or interaction behavior.
+
+## Browser verification
+
+`scripts/browser-smoke.mjs` checks a running production preview at `http://127.0.0.1:4321`. It uses Playwright with an isolated headless Chrome, never your personal Chrome profile. Install Playwright in a test environment or point `PORTFOLIO_PLAYWRIGHT_MODULE` at its module entry, then run `node scripts/browser-smoke.mjs`. `PORTFOLIO_PREVIEW_URL` overrides the preview URL. Screenshots and the JSON report are written to gitignored `artifacts/qa/`.
+
+Coverage: all 14 routes, mobile widths 320/390/768, desktop 1440, project controls and keyboard, publication radio filters and disclosures, pause persistence, reduced motion, and JavaScript-disabled reading.

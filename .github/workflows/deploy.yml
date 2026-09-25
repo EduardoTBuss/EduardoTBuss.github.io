@@ -53,6 +53,9 @@ jobs:
       - name: Enforce the page weight budget
         run: npm run budget
 
+      - name: Validate local links and anchors
+        run: npm run check:links
+
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:

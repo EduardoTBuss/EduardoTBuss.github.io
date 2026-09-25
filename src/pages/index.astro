@@ -1,44 +1,156 @@
 ---
-/**
- * The home page is a list of sections, on purpose. Reordering the site or
- * dropping a section is a one-line change here; nothing else knows the order.
- */
-import Base from '../layouts/Base.astro';
-import Hero from '../components/sections/Hero.astro';
-import About from '../components/sections/About.astro';
-import Research from '../components/sections/Research.astro';
-import Publications from '../components/sections/Publications.astro';
-import SelectedWork from '../components/sections/SelectedWork.astro';
-import Cv from '../components/sections/Cv.astro';
-import Now from '../components/sections/Now.astro';
-import Contact from '../components/sections/Contact.astro';
-import { getProfile } from '../lib/content';
-
+/** Overview composition. Detailed records remain on their dedicated routes. */
+import Base from "../layouts/Base.astro";
+import Hero from "../components/sections/Hero.astro";
+import HorizontalProjectDeck from "../components/HorizontalProjectDeck.astro";
+import PublicationCard from "../components/PublicationCard.astro";
+import ResearchOverview from "../components/sections/ResearchOverview.astro";
+import Contact from "../components/sections/Contact.astro";
+import { getProfile, getPortfolioWork, getFeaturedWork, getPublications } from "../lib/content";
 const p = getProfile();
+const projects = getPortfolioWork();
+const featured = getFeaturedWork();
+const publications = getPublications();
 const jsonLd = {
-  '@context': 'https://schema.org',
-  '@type': 'Person',
+  "@context": "https://schema.org",
+  "@type": "Person",
   name: p.name,
   jobTitle: p.subtitle,
   description: p.bio,
   url: Astro.site?.href,
-  email: p.links.academic_email.replace('mailto:', ''),
-  affiliation: { '@type': 'CollegeOrUniversity', name: 'Universidade Federal de Pelotas' },
-  knowsAbout: p.interests,
   sameAs: [p.links.github, p.links.linkedin, p.links.orcid],
 };
 ---
+
 <Base
-  title={`${p.name} — ${p.role}`}
+  title={`${p.name} — Engineering & Research`}
   description={p.bio}
   jsonLd={jsonLd}
 >
-  <Hero />
-  <About />
-  <Research />
-  <Publications />
-  <SelectedWork />
-  <Cv />
-  <Now />
+  <div class="landing-grid">
+    <div class="hero-column"><Hero /></div>
+    <nav class="quick-paths" aria-label="Explore the portfolio">
+    <a href="/publications/">
+      <strong>{publications.length}</strong>
+      <span>Research papers</span>
+      <small>Read the publications ↗</small>
+    </a>
+    <a href="/projects/">
+      <strong>{projects.length}</strong>
+      <span>Project case studies</span>
+      <small>Explore the work ↗</small>
+    </a>
+    <a href="/cv/">
+      <strong>UFPel</strong>
+      <span>Computer Engineering</span>
+      <small>See my background ↗</small>
+    </a>
+    </nav>
+  </div>
+  <section class="overview-section" id="explore" aria-labelledby="work-heading">
+    <div class="section-heading">
+      <div>
+        <span class="section-kicker">01 / SELECTED WORK</span><h2
+          id="work-heading"
+        >
+          Work you can explore.
+        </h2>
+      </div><a href="/projects/">Explore all {projects.length} projects ↗</a>
+    </div>
+    <HorizontalProjectDeck projects={featured} />
+  </section>
+  <ResearchOverview />
+  <section class="overview-section" aria-labelledby="papers-heading">
+    <div class="section-heading">
+      <div>
+        <span class="section-kicker">03 / PUBLICATIONS</span><h2
+          id="papers-heading"
+        >
+          Ideas, put to paper.
+        </h2>
+      </div><a href="/publications/"
+        >All {publications.length} publications ↗</a>
+    </div>
+    <div class="publication-grid">
+      {
+        publications
+          .slice(0, 2)
+          .map((publication) => <PublicationCard publication={publication} />)
+      }
+    </div>
+  </section>
   <Contact />
 </Base>
+<style>
+  .landing-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.6fr) minmax(310px, 0.8fr);
+    gap: clamp(var(--s5), 4vw, var(--s8));
+    align-items: center;
+    border-bottom: 1px solid var(--rule);
+  }
+  .hero-column {
+    min-width: 0;
+  }
+  .quick-paths {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--s4);
+  }
+  .quick-paths a {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s2);
+    min-height: 140px;
+    padding: var(--s5);
+    color: var(--fg);
+    background: var(--bg-surface);
+    border: 1px solid var(--rule-bright);
+    border-radius: var(--radius-lg);
+  }
+  .quick-paths a:hover {
+    text-decoration: none;
+    border-color: var(--accent);
+    background: var(--bg-elevated);
+  }
+  .quick-paths strong {
+    font-size: clamp(1.6rem, 3vw, 2.25rem);
+    letter-spacing: -0.05em;
+    line-height: 1;
+    color: var(--accent);
+  }
+  .quick-paths span {
+    font-size: 0.95rem;
+    font-weight: 600;
+  }
+  .quick-paths small {
+    margin-top: auto;
+    color: var(--fg-muted);
+    font-size: 0.78rem;
+  }
+  .overview-section {
+    margin-block: var(--space-section);
+  }
+  .publication-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--s5);
+  }
+  @media (max-width: 760px) {
+    .landing-grid {
+      grid-template-columns: 1fr;
+      gap: var(--s5);
+      padding-bottom: var(--s6);
+    }
+    .quick-paths {
+      grid-template-columns: 1fr;
+    }
+    .quick-paths a {
+      min-height: 0;
+      padding: var(--s4);
+    }
+    .publication-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

@@ -1,0 +1,191 @@
+﻿---
+/** Native disclosure keeps topic notes usable with touch, keyboard, and JavaScript disabled. */
+import CrossLink from "./CrossLink.astro";
+import { publicationLink, type ProjectRef } from "../lib/content";
+import type { Publication } from "../lib/schemas";
+interface Props {
+  publication: Publication & { relatedProjects: ProjectRef[] };
+  abstract?: string;
+  categoryTag?: string;
+}
+const { publication, abstract, categoryTag = "cat-quantum" } = Astro.props;
+const link = publicationLink(publication);
+// Editorial topic descriptions derived only from the canonical titles; never paper abstracts or findings.
+const topics: Record<string, string> = {
+  "cec-2026-hybrid-fuzzy-cri":
+    "A hybrid classical–quantum formulation of fuzzy CRI inference, with a triage case study.",
+  "iceis-2026-encoding-slr":
+    "A systematic literature review of classical data encoding strategies for hybrid quantum machine learning.",
+  "eniac-2026-ql-implications":
+    "Quantum-fuzzy modeling with QL-implications and an application to financial decision-making.",
+  "eramia-rs-2025-cnn-architecture":
+    "An assessment of CNN architecture choices for image classification: depth, width, and kernel size.",
+  "weit-2025-imz":
+    "An analysis of the IMZ algorithm through simulation in Qiskit.",
+  "weciq-2025-bernstein-vazirani":
+    "A quantum analysis of the Bernstein–Vazirani algorithm with an implementation in Qiskit.",
+};
+const description = abstract || topics[publication.id] || publication.title;
+---
+
+<article
+  class={`tech-card pub-card ${categoryTag}`}
+  id={`pub-${publication.id}`}
+>
+  <div class="pub-header">
+    <span class="venue-name">{publication.venue}</span>
+    <span class="pub-year">{publication.year}</span>
+  </div>
+  <h3 class="pub-title">{publication.title}</h3>
+  <span class="status-tag">{publication.status}</span>
+  <details class="publication-details">
+    <summary
+      >{abstract ? "Read abstract" : "Explore topic"}<span aria-hidden="true"
+        >↗</span
+      ></summary
+    >
+    {
+      !abstract && (
+        <span class="topic-label">Topic summary · based on the title</span>
+      )
+    }
+    <p>{description}</p>
+  </details>
+  <div class="pub-footer">
+    {
+      link && (
+        <a href={link.url} rel="noopener" class="pub-action-btn">
+          {link.label}
+          <span aria-hidden="true"> ↗</span>
+        </a>
+      )
+    }
+    {
+      publication.relatedProjects.map((project) => (
+        <CrossLink project={project} />
+      ))
+    }
+  </div>
+</article>
+<style>
+  .pub-card {
+    display: flex;
+    flex-direction: column;
+    padding: clamp(1.4rem, 3vw, 2rem);
+    position: relative;
+    border: 1px solid var(--rule);
+    border-radius: var(--radius-lg);
+    background: var(--bg-surface);
+    transition:
+      border-color 0.25s,
+      transform 0.25s;
+  }
+  .pub-card:hover {
+    border-color: var(--accent);
+    transform: translateY(-3px);
+  }
+  .pub-header {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--s3);
+    margin-bottom: var(--s5);
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    line-height: 1.5;
+  }
+  .venue-name {
+    color: var(--accent);
+  }
+  .pub-year {
+    color: var(--fg-muted);
+  }
+  .pub-title {
+    font-size: clamp(1.1rem, 1.7vw, 1.35rem);
+    line-height: 1.4;
+    font-weight: 500;
+    margin: 0 0 var(--s4);
+    color: var(--fg);
+  }
+  .status-tag {
+    align-self: flex-start;
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--fg-muted);
+  }
+  .publication-details {
+    margin: var(--s5) 0;
+  }
+  summary {
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--s3);
+    cursor: pointer;
+    font-size: 0.8rem;
+    color: var(--fg-muted);
+    list-style: none;
+    border-top: 1px solid var(--rule);
+  }
+  summary::-webkit-details-marker {
+    display: none;
+  }
+  summary:hover,
+  summary:focus-visible {
+    color: var(--accent);
+  }
+  summary:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 4px;
+  }
+  summary span {
+    transition: transform 0.2s;
+  }
+  details[open] summary span {
+    transform: rotate(90deg);
+  }
+  .topic-label {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    color: var(--accent);
+    margin: var(--s2) 0;
+  }
+  .publication-details p {
+    color: var(--fg-muted);
+    font-size: var(--fs-sm);
+    line-height: 1.65;
+    margin: var(--s2) 0 0;
+  }
+  .pub-footer {
+    margin-top: auto;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s3);
+    align-items: center;
+  }
+  .pub-action-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--s2);
+    min-height: 44px;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--accent);
+    text-decoration: none;
+  }
+  .pub-action-btn:hover {
+    text-decoration: underline;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .pub-card,
+    summary span {
+      transition: none;
+    }
+    .pub-card:hover {
+      transform: none;
+    }
+  }
+</style>

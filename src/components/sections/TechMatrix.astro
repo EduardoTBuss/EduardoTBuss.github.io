@@ -1,0 +1,122 @@
+---
+/**
+ * Disciplined, 4-quadrant engineering and tooling matrix.
+ * Shows core capabilities without chaotic tag overload.
+ */
+import Section from '../Section.astro';
+
+const STACK_DOMAINS = [
+  {
+    code: '01',
+    category: 'Quantum Computing & Math',
+    desc: 'Quantum circuits in Qiskit, quantum-fuzzy CRI modeling, interference fringes and unitary oracles.',
+    tools: ['Qiskit', 'Qiskit ML', 'Fuzzy Systems', 'NumPy', 'State Vectors'],
+    accent: 'var(--accent)',
+  },
+  {
+    code: '02',
+    category: 'Systems & Hardware Architecture',
+    desc: 'Digital hardware description, low-level algorithms, sequential impulse contact solvers and memory layout.',
+    tools: ['C', 'C++', 'VHDL', 'Digital Logic', 'FPGA Basics'],
+    accent: 'var(--accent-indigo)',
+  },
+  {
+    code: '03',
+    category: 'Machine Learning & Computer Vision',
+    desc: 'Convolutional neural network assessment, hyperparameter search, gradient backpropagation derived from scratch.',
+    tools: ['PyTorch', 'CNNs', 'scikit-learn', 'Vectorized Backprop'],
+    accent: 'var(--accent)',
+  },
+  {
+    code: '04',
+    category: 'Harness Engineering & Backend Systems',
+    desc: 'Deterministic test harnesses, conservation audits, golden hash verification, append-only ledger APIs.',
+    tools: ['Python', 'FastAPI', 'SQLAlchemy', 'Test Suites', 'Pessimistic Locks'],
+    accent: 'var(--accent-green)',
+  },
+];
+---
+
+<Section id="stack" title="Technical Matrix & Tooling">
+  <div class="tech-grid">
+    {STACK_DOMAINS.map((domain) => (
+      <div class="tech-card domain-box">
+        <div class="domain-header">
+          <span class="domain-code" style={`color: ${domain.accent};`}>//{domain.code}</span>
+          <h3 class="domain-title">{domain.category}</h3>
+        </div>
+        <p class="domain-desc">{domain.desc}</p>
+        <div class="domain-tools">
+          {domain.tools.map((tool) => (
+            <span class="mono-tag tool-tag">{tool}</span>
+          ))}
+        </div>
+      </div>
+    ))}
+  </div>
+</Section>
+
+<style>
+  .tech-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--s4);
+  }
+
+  @media (max-width: 640px) {
+    .tech-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .domain-box {
+    padding: var(--s5);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .domain-header {
+    display: flex;
+    align-items: center;
+    gap: var(--s3);
+    margin-bottom: var(--s2);
+  }
+
+  .domain-code {
+    font-family: var(--font-mono);
+    font-size: var(--fs-xs);
+    font-weight: 700;
+  }
+
+  .domain-title {
+    font-size: var(--fs-base);
+    font-weight: 600;
+    color: var(--fg);
+    margin: 0;
+  }
+
+  .domain-desc {
+    font-size: var(--fs-sm);
+    color: var(--fg-muted);
+    line-height: var(--lh-body);
+    margin-bottom: var(--s4);
+  }
+
+  .domain-tools {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: auto;
+  }
+
+  .tool-tag {
+    font-size: 11px;
+    transition: all 0.2s ease;
+  }
+
+  .domain-box:hover .tool-tag {
+    border-color: var(--rule-bright);
+    color: var(--fg);
+  }
+</style>

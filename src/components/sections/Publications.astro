@@ -1,12 +1,142 @@
 ---
+/**
+ * Publications section with zero-JS interactive category tabs.
+ */
 import Section from '../Section.astro';
-import ItemList from '../ItemList.astro';
-import PublicationItem from '../PublicationItem.astro';
+import PublicationCard from '../PublicationCard.astro';
 import { getPublications } from '../../lib/content';
+
 const publications = getPublications();
+
+const CATEGORY_MAP: Record<string, string> = {
+  'cec-2026-hybrid-fuzzy-cri': 'cat-quantum',
+  'iceis-2026-encoding-slr': 'cat-quantum',
+  'eniac-2026-ql-implications': 'cat-quantum',
+  'weit-2025-imz': 'cat-quantum',
+  'weciq-2025-bernstein-vazirani': 'cat-quantum',
+  'eramia-rs-2025-cnn-architecture': 'cat-ml',
+};
 ---
-<Section id="publications" title="Publications">
-  <ItemList>
-    {publications.map((publication) => <PublicationItem publication={publication} />)}
-  </ItemList>
+
+<Section id="publications" title="Publications & Conference Papers">
+  <div class="pub-interactive-wrapper">
+    <!-- Zero-JS CSS-driven filter tabs using radio buttons -->
+    <div class="tabs-container" role="group" aria-label="Filter publications by research track">
+      <input type="radio" name="pub-tab" id="tab-all" checked class="tab-radio sr-only" />
+      <label for="tab-all" class="tab-label">
+        <span class="tab-bracket">[</span>All Tracks <span class="tab-count">{publications.length}</span><span class="tab-bracket">]</span>
+      </label>
+
+      <input type="radio" name="pub-tab" id="tab-quantum" class="tab-radio sr-only" />
+      <label for="tab-quantum" class="tab-label">
+        <span class="tab-bracket">[</span>Quantum & Fuzzy <span class="tab-count">{publications.filter(p => CATEGORY_MAP[p.id] !== 'cat-ml').length}</span><span class="tab-bracket">]</span>
+      </label>
+
+      <input type="radio" name="pub-tab" id="tab-ml" class="tab-radio sr-only" />
+      <label for="tab-ml" class="tab-label">
+        <span class="tab-bracket">[</span>Machine Learning <span class="tab-count">{publications.filter(p => CATEGORY_MAP[p.id] === 'cat-ml').length}</span><span class="tab-bracket">]</span>
+      </label>
+
+      <div class="pub-grid">
+        {publications.map((publication) => (
+          <div class={`pub-item ${CATEGORY_MAP[publication.id] || 'cat-quantum'}`}>
+            <PublicationCard
+              publication={publication}
+              categoryTag={CATEGORY_MAP[publication.id] || 'cat-quantum'}
+            />
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
 </Section>
+
+<style>
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+  }
+
+  .tabs-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s2);
+    align-items: center;
+  }
+
+  .tab-radio:focus-visible + .tab-label { outline:2px solid var(--accent); outline-offset:4px; }
+
+  .tab-label {
+    font-family: var(--font-mono);
+    font-size: var(--fs-xs);
+    color: var(--fg-muted);
+    background: var(--bg-surface);
+    border: 1px solid var(--rule);
+    padding: 6px 14px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    user-select: none;
+    transition: all 0.2s ease;
+  }
+
+  .tab-label .tab-bracket {
+    color: var(--fg-dim);
+  }
+
+  .tab-count {
+    font-size: 10px;
+    color: var(--accent);
+    margin-left: 2px;
+  }
+
+  .tab-label:hover {
+    color: var(--fg);
+    border-color: var(--rule-bright);
+    background: var(--bg-elevated);
+  }
+
+  /* Active tab states via CSS :checked */
+  #tab-all:checked ~ label[for="tab-all"],
+  #tab-quantum:checked ~ label[for="tab-quantum"],
+  #tab-ml:checked ~ label[for="tab-ml"] {
+    color: var(--fg);
+    border-color: var(--accent);
+    background: var(--bg-elevated);
+    box-shadow: 0 0 10px 0 var(--accent-glow);
+  }
+
+  #tab-all:checked ~ label[for="tab-all"] .tab-bracket,
+  #tab-quantum:checked ~ label[for="tab-quantum"] .tab-bracket,
+  #tab-ml:checked ~ label[for="tab-ml"] .tab-bracket {
+    color: var(--accent);
+  }
+
+  .pub-grid {
+    width: 100%;
+    margin-top: var(--s5);
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--s4);
+  }
+
+  @media (max-width: 768px) {
+    .pub-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* CSS filtering behavior */
+  #tab-quantum:checked ~ .pub-grid .pub-item:not(.cat-quantum) {
+    display: none;
+  }
+
+  #tab-ml:checked ~ .pub-grid .pub-item:not(.cat-ml) {
+    display: none;
+  }
+</style>

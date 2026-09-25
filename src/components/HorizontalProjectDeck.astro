@@ -1,0 +1,120 @@
+---
+import { getSelectedWork } from "../lib/content";
+import type { Project } from "../lib/schemas";
+import ProjectFeaturedCard from "./ProjectFeaturedCard.astro";
+interface Props {
+  projects?: Project[];
+}
+const { projects = getSelectedWork() } = Astro.props;
+---
+
+<div class="project-deck" data-project-deck>
+  <div
+    class="deck-track"
+    tabindex="0"
+    role="region"
+    aria-label="Selected projects. Scroll horizontally to explore."
+  >
+    {
+      projects.map((project, index) => (
+        <div
+          class="deck-slide"
+          role="group"
+          aria-label={`Project ${index + 1} of ${projects.length}`}
+        >
+          <ProjectFeaturedCard project={project} />
+        </div>
+      ))
+    }
+  </div>
+  <div class="deck-footer">
+    <span class="deck-hint">A closer look at the work ↔</span><div
+      class="deck-navigation"
+      hidden
+    >
+      <span class="deck-count" aria-live="polite" aria-atomic="true"
+        >01 / {String(projects.length).padStart(2, "0")}</span
+      ><button type="button" data-deck-prev aria-label="Previous project"
+        >←</button
+      ><button type="button" data-deck-next aria-label="Next project">→</button>
+    </div>
+  </div>
+</div>
+<script>
+  import "../scripts/project-deck";
+</script>
+<style>
+  .deck-track {
+    display: flex;
+    gap: 22px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: thin;
+    scrollbar-color: var(--rule-bright) transparent;
+    padding-bottom: 14px;
+    overscroll-behavior-x: contain;
+    border-radius: 24px;
+  }
+  .deck-slide {
+    flex: 0 0 94%;
+    scroll-snap-align: start;
+    min-width: 0;
+  }
+  .deck-slide:only-child {
+    flex-basis: 100%;
+  }
+  .deck-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 18px;
+    gap: 16px;
+  }
+  .deck-hint {
+    font: 11px var(--font-mono);
+    color: var(--fg-dim);
+  }
+  .deck-navigation {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .deck-navigation[hidden] {
+    display: none;
+  }
+  .deck-count {
+    font: 11px var(--font-mono);
+    color: var(--fg-muted);
+    margin-right: 16px;
+  }
+  .deck-navigation button {
+    height: 44px;
+    width: 44px;
+    border-radius: 50%;
+    border: 1px solid var(--rule-bright);
+    background: transparent;
+    color: var(--fg);
+    cursor: pointer;
+    font-size: 20px;
+  }
+  .deck-navigation button:hover:not(:disabled) {
+    background: var(--accent);
+    color: var(--bg);
+  }
+  .deck-navigation button:disabled {
+    opacity: 0.3;
+    cursor: default;
+  }
+  @media (max-width: 760px) {
+    .deck-slide {
+      flex-basis: 94%;
+    }
+    .deck-track {
+      gap: 14px;
+    }
+    .deck-hint {
+      font-size: 9px;
+      max-width: 130px;
+    }
+  }
+</style>

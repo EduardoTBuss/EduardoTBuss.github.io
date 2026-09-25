@@ -1,20 +1,191 @@
 ---
+/**
+ * Selected Work section featuring high-impact visual simulations
+ * with media slots (physics2d, nbody, quantum) and secondary systems grid.
+ */
 import Section from '../Section.astro';
-import ItemList from '../ItemList.astro';
-import ProjectItem from '../ProjectItem.astro';
-import { getSelectedWork, getProfile } from '../../lib/content';
-const projects = getSelectedWork();
+import HorizontalProjectDeck from '../HorizontalProjectDeck.astro';
+import { getPortfolioWork, getFeaturedWork, getProfile } from '../../lib/content';
+
+const projects = getPortfolioWork();
 const profile = getProfile();
+
+const featuredProjects = getFeaturedWork();
+const featuredSlugs = new Set(featuredProjects.map((project) => project.slug));
+const otherProjects = projects.filter((project) => !featuredSlugs.has(project.slug));
+
 ---
-<Section id="work" title="Selected work">
-  <ItemList>
-    {projects.map((project) => <ProjectItem project={project} />)}
-  </ItemList>
-  <p class="meta more">
-    <a href={`${profile.links.github}?tab=repositories`} rel="noopener">Other repositories on GitHub</a>
-  </p>
+
+<Section id="work" title="Featured Engineering & Selected Work">
+  <div class="featured-column">
+    <HorizontalProjectDeck projects={featuredProjects} />
+
+    {otherProjects.length > 0 && (
+      <div class="secondary-section">
+        <h3 class="secondary-heading">// Additional Systems & Analysis</h3>
+        <div class="secondary-grid">
+          {otherProjects.map((p) => (
+            <div class="tech-card secondary-card">
+              <div class="sec-card-header">
+                <h4 class="sec-title">{p.title}</h4>
+                <span class="mono-tag">{p.year}</span>
+              </div>
+              <p class="sec-tagline">{p.tagline}</p>
+              {p.headline_metric && (
+                <div class="sec-metric">
+                  <span class="sec-metric-tag">{p.headline_metric}</span>
+                </div>
+              )}
+              <div class="sec-footer">
+                <div class="sec-langs">
+                  {p.languages.map((l) => <span class="mono-tag" style="font-size: 10px;">{l}</span>)}
+                </div>
+                <div class="sec-actions">
+                  <a href={p.links.repo} rel="noopener" class="sec-btn">
+                    <span class="bracket">[</span>repo<span class="bracket">]</span>
+                  </a>
+                  <a href={`/projects/${p.slug}/`} class="sec-btn sec-btn-primary">
+                    <span class="bracket">[</span>case study &rarr;<span class="bracket">]</span>
+                  </a>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    )}
+
+    <p class="more-repos">
+      <a href={`${profile.links.github}?tab=repositories`} rel="noopener" class="term-btn">
+        <span class="bracket">[</span>View all other repositories on GitHub &rarr;<span class="bracket">]</span>
+      </a>
+    </p>
+  </div>
 </Section>
 
 <style>
-  .more { margin-top: var(--space-item); }
+  .featured-column {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s6);
+  }
+
+  .featured-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--s5);
+  }
+
+  .secondary-section {
+    margin-top: var(--s4);
+  }
+
+  .secondary-heading {
+    font-family: var(--font-mono);
+    font-size: var(--fs-sm);
+    color: var(--fg-dim);
+    margin-bottom: var(--s4);
+    letter-spacing: 0.05em;
+  }
+
+  .secondary-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--s4);
+  }
+
+  @media (max-width: 800px) {
+    .secondary-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .secondary-card {
+    padding: var(--s4);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .sec-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: var(--s2);
+  }
+
+  .sec-title {
+    font-size: var(--fs-base);
+    color: var(--fg);
+    margin: 0;
+    font-weight: 600;
+  }
+
+  .sec-tagline {
+    font-size: var(--fs-xs);
+    color: var(--fg-muted);
+    line-height: var(--lh-body);
+    margin-bottom: var(--s3);
+  }
+
+  .sec-metric {
+    margin-bottom: var(--s3);
+  }
+
+  .sec-metric-tag {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--accent-green);
+    background: rgba(52, 211, 153, 0.06);
+    border: 1px solid rgba(52, 211, 153, 0.2);
+    padding: 2px 6px;
+    border-radius: var(--radius-sm);
+    display: inline-block;
+  }
+
+  .sec-footer {
+    margin-top: auto;
+    padding-top: var(--s3);
+    border-top: 1px dashed var(--rule);
+    display: flex;
+    flex-direction: column;
+    gap: var(--s2);
+  }
+
+  .sec-langs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+
+  .sec-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .sec-btn {
+    font-family: var(--font-mono);
+    font-size: var(--fs-xs);
+    color: var(--fg-muted);
+    text-decoration: none;
+  }
+
+  .sec-btn .bracket {
+    color: var(--accent);
+  }
+
+  .sec-btn-primary {
+    color: var(--accent);
+  }
+
+  .sec-btn:hover {
+    color: var(--fg);
+    text-decoration: underline;
+  }
+
+  .more-repos {
+    margin-top: var(--s2);
+    text-align: center;
+  }
 </style>

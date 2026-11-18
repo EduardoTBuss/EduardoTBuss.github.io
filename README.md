@@ -37,6 +37,7 @@ Set `DATA_SOURCE` to use another canonical data directory. `npm run build` alone
 | Home composition | `src/pages/index.astro` |
 | Individual home sections | `src/components/sections/` |
 | Publication disclosure and topic notes | `src/components/PublicationCard.astro` |
+| VQC research case study and chart | `src/pages/publications/vqc-depth/index.astro` and `scripts/generate-vqc-depth-figure.py` (Matplotlib) |
 | Project prose | `src/content/projects/<slug>.md` |
 | Order Forge card screenshot | `public/images/order-forge-reconciliation.png` (copied from `Order-forge/docs/assets/`) |
 | Profile, project metadata, publication status, CV | `data/*.json` in the canonical sibling repository |

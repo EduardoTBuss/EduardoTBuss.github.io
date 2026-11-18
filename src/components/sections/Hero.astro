@@ -11,13 +11,12 @@ const p = getProfile();
       From models to <em>reliable AI systems.</em>
     </p>
     <p class="hero-context">
-      I build LLM workflows, evaluate learning systems and research quantum-fuzzy methods
-      at UFPel. Every project shows its evidence and limits.
+      I build and evaluate AI systems and study quantum-fuzzy methods at UFPel.
     </p>
     <div class="hero-actions">
-      <a class="button-primary" href="#explore">See the work ↗</a><a
+      <a class="button-primary" href="#explore">See work ↗</a><a
         class="button-text"
-        href="/publications/">Read publications ↗</a>
+        href="/publications/">Publications ↗</a>
     </div>
   </div>
 </header>
@@ -119,43 +118,33 @@ const p = getProfile();
   }
   @media (max-width: 760px) {
     .hero {
-      min-height: 650px;
-      padding-block: var(--s8);
+      min-height: 0;
+      padding-block: var(--s5) var(--s3);
     }
     h1 {
       font-size: clamp(3.8rem, 12.8vw, 6.5rem);
     }
     .eyebrow {
-      margin-bottom: var(--s6);
+      margin-bottom: var(--s4);
     }
     .hero-statement {
-      margin-top: var(--s6);
+      margin-top: var(--s4);
     }
     .hero-actions {
       gap: var(--s3) var(--s5);
-      margin-top: var(--s6);
+      margin-top: var(--s5);
     }
-    .hero-bottom > span {
+    .hero-bottom {
       display: none;
     }
   }
   @media (max-width: 420px) {
-    .hero {
-      min-height: 570px;
-    }
     h1 {
       font-size: clamp(3.2rem, 12.5vw, 4.2rem);
     }
     .hero-actions {
-      align-items: stretch;
-      flex-direction: column;
-    }
-    .hero-actions .button-primary {
-      width: 100%;
-      justify-content: space-between;
-    }
-    .hero-actions .button-text {
-      width: fit-content;
+      gap: var(--s2) var(--s4);
+      font-size: 0.85rem;
     }
   }
 </style>

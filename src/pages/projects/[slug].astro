@@ -77,6 +77,18 @@ const { Content } = await render(page);
     margin-bottom: var(--space-heading);
   }
   .prose :global(p) { margin-bottom: var(--space-paragraph); }
+  .prose :global(figure) { margin: var(--s5) 0 var(--s7); }
+  .prose :global(figure img) {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    border-radius: var(--radius-lg);
+  }
+  .prose :global(figcaption) {
+    margin-top: var(--s2);
+    color: var(--fg-muted);
+    font-size: var(--fs-sm);
+  }
   section { margin-top: var(--space-section); }
   section h2 { margin-bottom: var(--space-heading); }
   ul { padding-left: var(--s5); }

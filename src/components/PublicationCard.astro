@@ -1,7 +1,7 @@
 ---
 /** Native disclosure keeps topic notes usable with touch, keyboard, and JavaScript disabled. */
 import CrossLink from "./CrossLink.astro";
-import { publicationLink, type ProjectRef } from "../lib/content";
+import { publicationLink, vqcDepthStudy, type ProjectRef } from "../lib/content";
 import type { Publication } from "../lib/schemas";
 interface Props {
   publication: Publication & { relatedProjects: ProjectRef[] };
@@ -18,6 +18,8 @@ const topics: Record<string, string> = {
     "A systematic literature review of classical data encoding strategies for hybrid quantum machine learning.",
   "eniac-2026-ql-implications":
     "Quantum-fuzzy modeling with QL-implications and an application to financial decision-making.",
+  "eramia-rs-2026-vqc-depth":
+    "A comparison of variational quantum classifiers at different depths with a classical MLP baseline.",
   "eramia-rs-2025-cnn-architecture":
     "An assessment of CNN architecture choices for image classification: depth, width, and kernel size.",
   "weit-2025-imz":
@@ -52,6 +54,11 @@ const description = abstract || topics[publication.id] || publication.title;
     <p>{description}</p>
   </details>
   <div class="pub-footer">
+    {
+      publication.id === vqcDepthStudy.publicationId && (
+        <a href={vqcDepthStudy.href} class="pub-action-btn">View results ↗</a>
+      )
+    }
     {
       link && (
         <a href={link.url} rel="noopener" class="pub-action-btn">

@@ -86,6 +86,11 @@ export const getProfile = (): Profile => profile;
 
 export const getResearch = (): ResearchItem[] => research.items;
 
+export const vqcDepthStudy = {
+  publicationId: 'eramia-rs-2026-vqc-depth',
+  href: '/publications/vqc-depth/',
+} as const;
+
 /** Publications, newest first, each carrying the projects that implement it. */
 export const getPublications = (): (Publication & { relatedProjects: ProjectRef[] })[] =>
   [...publications.items]

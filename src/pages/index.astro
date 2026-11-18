@@ -6,7 +6,13 @@ import HorizontalProjectDeck from "../components/HorizontalProjectDeck.astro";
 import PublicationCard from "../components/PublicationCard.astro";
 import ResearchOverview from "../components/sections/ResearchOverview.astro";
 import Contact from "../components/sections/Contact.astro";
-import { getProfile, getPortfolioWork, getFeaturedWork, getPublications } from "../lib/content";
+import {
+  getProfile,
+  getPortfolioWork,
+  getFeaturedWork,
+  getPublications,
+  vqcDepthStudy,
+} from "../lib/content";
 const p = getProfile();
 const projects = getPortfolioWork();
 const featured = getFeaturedWork();
@@ -18,7 +24,7 @@ const jsonLd = {
   jobTitle: p.subtitle,
   description: p.bio,
   url: Astro.site?.href,
-  sameAs: [p.links.github, p.links.linkedin, p.links.orcid],
+  sameAs: [p.links.github, p.links.linkedin, p.links.orcid, p.links.scholar].filter(Boolean),
 };
 ---
 
@@ -29,22 +35,19 @@ const jsonLd = {
 >
   <div class="landing-grid">
     <div class="hero-column"><Hero /></div>
-    <nav class="quick-paths" aria-label="Explore the portfolio">
-    <a href="/publications/">
-      <strong>{publications.length}</strong>
-      <span>Research publications</span>
-      <small>Read the publications ↗</small>
-    </a>
-    <a href="/projects/">
-      <strong>{projects.length}</strong>
-      <span>Public project repositories</span>
-      <small>Explore the projects ↗</small>
-    </a>
-    <a href="/cv/">
-      <strong>UFPel</strong>
-      <span>Research & experience</span>
-      <small>See my background ↗</small>
-    </a>
+    <nav class="quick-paths" aria-label="Featured engineering and research">
+      <a href="/projects/order-forge/">
+        <span class="quick-label">Applied AI</span>
+        <strong>Order Forge</strong>
+        <span>PDF orders to validated EDIFACT with human review.</span>
+        <small>See the workflow and benchmark ↗</small>
+      </a>
+      <a href={vqcDepthStudy.href}>
+        <span class="quick-label">Published research · ERAMIA-RS 2026</span>
+        <strong>Does more circuit depth help?</strong>
+        <span>A second quantum circuit layer improved test F1 on three datasets.</span>
+        <small>See the results and classical baseline ↗</small>
+      </a>
     </nav>
   </div>
   <section class="overview-section" id="explore" aria-labelledby="work-heading">
@@ -101,7 +104,6 @@ const jsonLd = {
     display: flex;
     flex-direction: column;
     gap: var(--s2);
-    min-height: 140px;
     padding: var(--s5);
     color: var(--fg);
     background: var(--bg-surface);
@@ -114,18 +116,21 @@ const jsonLd = {
     background: var(--bg-elevated);
   }
   .quick-paths strong {
-    font-size: clamp(1.6rem, 3vw, 2.25rem);
-    letter-spacing: -0.05em;
-    line-height: 1;
-    color: var(--accent);
+    font-size: clamp(1.35rem, 2.5vw, 1.9rem);
+    letter-spacing: -0.04em;
+    line-height: 1.15;
   }
   .quick-paths span {
-    font-size: 0.95rem;
-    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--fg-muted);
+  }
+  .quick-paths .quick-label {
+    font: 0.73rem var(--font-mono);
+    color: var(--accent);
   }
   .quick-paths small {
-    margin-top: auto;
-    color: var(--fg-muted);
+    margin-top: var(--s1);
+    color: var(--accent);
     font-size: 0.78rem;
   }
   .overview-section {
@@ -139,15 +144,25 @@ const jsonLd = {
   @media (max-width: 760px) {
     .landing-grid {
       grid-template-columns: 1fr;
-      gap: var(--s5);
+      gap: var(--s3);
       padding-bottom: var(--s6);
     }
     .quick-paths {
-      grid-template-columns: 1fr;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--s3);
     }
     .quick-paths a {
-      min-height: 0;
-      padding: var(--s4);
+      padding: var(--s3);
+    }
+    .quick-paths strong {
+      font-size: clamp(1.07rem, 4vw, 1.3rem);
+    }
+    .quick-paths span {
+      font-size: 0.83rem;
+      line-height: 1.4;
+    }
+    .quick-paths small {
+      margin-top: auto;
     }
     .publication-grid {
       grid-template-columns: 1fr;

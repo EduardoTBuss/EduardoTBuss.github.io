@@ -23,6 +23,7 @@ export const profileSchema = z.object({
     github: z.string().url(),
     linkedin: z.string().url(),
     orcid: z.string().url(),
+    scholar: z.url().optional(),
     academic_email: z.string(),
   }),
 });

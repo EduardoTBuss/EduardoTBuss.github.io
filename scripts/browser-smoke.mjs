@@ -20,6 +20,7 @@ try {
     "/",
     "/projects/",
     "/publications/",
+    "/publications/vqc-depth/",
     "/cv/",
     "/projects/physics2d/",
     "/projects/nbody-sim/",
@@ -109,13 +110,18 @@ try {
     document.querySelector(".deck-count")?.textContent.startsWith("02"),
   );
   await page.goto(origin + "/publications/");
+  const publicationCount = await page.locator(".pub-item").count();
+  const mlCount = await page.locator(".pub-item.cat-ml").count();
+  const vqcCard = page.locator("#pub-eramia-rs-2026-vqc-depth");
   await page.locator('label[for="tab-ml"]').click();
-  assert.equal(await page.locator(".pub-item:visible").count(), 1);
+  assert.equal(await page.locator(".pub-item:visible").count(), mlCount);
+  assert.equal(await vqcCard.isVisible(), false);
   await page.locator("#tab-ml").focus();
   await page.keyboard.press("ArrowLeft");
-  assert.equal(await page.locator(".pub-item:visible").count(), 5);
+  assert.equal(await page.locator(".pub-item:visible").count(), publicationCount - mlCount);
+  assert.equal(await vqcCard.isVisible(), true);
   await page.locator('label[for="tab-all"]').click();
-  assert.equal(await page.locator(".pub-item:visible").count(), 6);
+  assert.equal(await page.locator(".pub-item:visible").count(), publicationCount);
   const disclosure = page.locator("details").first();
   await disclosure.locator("summary").click();
   assert.equal(await disclosure.getAttribute("open"), "");
@@ -139,6 +145,7 @@ try {
       "/",
       "/projects/",
       "/publications/",
+      "/publications/vqc-depth/",
       "/cv/",
       "/projects/physics2d/",
     ]) {
@@ -168,7 +175,7 @@ try {
   assert.equal(await staticPage.locator(".deck-slide").count(), 3);
   await staticPage.goto(origin + "/publications/");
   await staticPage.locator('label[for="tab-ml"]').click();
-  assert.equal(await staticPage.locator(".pub-item:visible").count(), 1);
+  assert.equal(await staticPage.locator(".pub-item:visible").count(), mlCount);
   await staticPage.locator("details:visible summary").first().click();
   assert.equal(await staticPage.locator("details[open]:visible").count(), 1);
   await nojs.close();

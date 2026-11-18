@@ -1,6 +1,6 @@
 ---
 project: order-forge
-updated: "2026-09-25"
+updated: "2026-11-18"
 metrics:
   - label: Benchmark runs across formats and strategies
     value: "12"
@@ -42,6 +42,16 @@ some lines to incorrect valid codes. The deterministic parser got all 7 catalog 
 on the German sample and produced a 55-segment `ORDERS:D:96A` message; it did not handle
 the other layouts reliably. The repository reports 82 passing backend tests. These are
 challenge and test results, not production customer metrics.
+
+The seven-line [Bauprofil challenge order](https://github.com/EduardoTBuss/order-forge/blob/main/docs/sources/orders/bauprofil-de/PO-2026-0615.pdf)
+shows the full path from PDF to validated export. The review screen shows the resolved
+catalog codes before export. The [reference EDIFACT](https://github.com/EduardoTBuss/order-forge/blob/main/docs/sources/orders/bauprofil-de/PO-2026-0615.edi)
+is the comparison target for this fixture.
+
+<figure>
+  <img src="/images/order-forge-reconciliation.png" width="666" height="910" loading="lazy" alt="Order Forge review screen with seven of seven lines resolved and Generate EDIFACT available." />
+  <figcaption>The Bauprofil test order in the reconciliation screen before export.</figcaption>
+</figure>
 
 ## Engineering decisions
 

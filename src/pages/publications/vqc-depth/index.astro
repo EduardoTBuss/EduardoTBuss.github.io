@@ -1,0 +1,117 @@
+---
+import Base from "../../../layouts/Base.astro";
+import {
+  getProfile,
+  getPublicationsFor,
+  publicationLink,
+  vqcDepthStudy,
+} from "../../../lib/content";
+
+const profile = getProfile();
+const [publication] = getPublicationsFor([vqcDepthStudy.publicationId]);
+const paper = publication && publicationLink(publication);
+const description =
+  "Test F1 across circuit depths on three datasets, with a classical MLP baseline.";
+---
+
+<Base title={`How circuit depth changes VQC performance | ${profile.name}`} description={description}>
+  <article class="study">
+    <a class="button-text" href="/publications/">← All publications</a>
+    <header>
+      <p class="venue">ERAMIA-RS 2026</p>
+      <h1>Does a deeper quantum classifier perform better?</h1>
+      <p class="lead">
+        A second circuit layer improved test F1 on all three datasets. Going from
+        two to four layers improved F1 detectably only on Banknote.
+      </p>
+      {paper && <a class="button-primary" href={paper.url}>Read the paper ↗</a>}
+    </header>
+
+    <figure aria-labelledby="f1-caption">
+      <img
+        src="/images/vqc-depth-test-f1.png"
+        alt="Test F1 rises from one to two circuit layers on Banknote, Blood and Mammographic. The classical MLP has the highest mean on Banknote and Blood, while its mean is close to the deeper classifiers on Mammographic."
+        width="1012"
+        height="371"
+        decoding="async"
+      />
+      <figcaption id="f1-caption">
+        Test F1, higher is better. Points show means and whiskers show sample
+        standard deviations across ten paired splits. Circles represent
+        the 1-, 2- and 4-layer variational quantum classifiers. Diamonds
+        represent the classical MLP at learning rate 0.05. Source: Table 1.
+        <a href="/images/vqc-depth-test-f1.png">Open full-size chart ↗</a>
+      </figcaption>
+    </figure>
+
+    <section aria-labelledby="interpretation">
+      <h2 id="interpretation">What the comparison shows</h2>
+      <p>
+        Each model received the same train, validation and test split for each
+        seed. The F1 gains from adding a second layer passed the study's
+        Holm-adjusted paired tests on all three datasets. On Mammographic,
+        four layers improved ROC AUC over two layers, while the F1 comparison
+        remained inconclusive.
+      </p>
+      <p>
+        The MLP was competitive and had the highest mean F1 on Banknote and Blood.
+        The experiment used one circuit design on an ideal four-qubit simulator
+        and one classical architecture. The paired tests are exploratory because
+        the splits overlap.
+      </p>
+    </section>
+  </article>
+</Base>
+
+<style>
+  .study {
+    max-width: 54rem;
+    margin-inline: auto;
+    padding-block: var(--s7) var(--s9);
+  }
+  header {
+    margin-block: var(--s5) var(--s7);
+  }
+  .venue {
+    font: 0.8rem var(--font-mono);
+    color: var(--accent);
+  }
+  h1 {
+    margin-block: var(--s3);
+    font-size: clamp(2.05rem, 5vw, 3.55rem);
+    line-height: 1.08;
+  }
+  .lead {
+    font-size: clamp(1rem, 2vw, 1.2rem);
+    color: var(--fg-muted);
+    max-width: 39rem;
+  }
+  header a {
+    margin-top: var(--s3);
+  }
+  figure {
+    margin: var(--s5) 0 var(--s7);
+    overflow: hidden;
+    border: 1px solid var(--rule);
+    border-radius: var(--radius-lg);
+    background: var(--bg-surface);
+  }
+  img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  figcaption,
+  section p {
+    color: var(--fg-muted);
+    line-height: 1.65;
+  }
+  figcaption {
+    padding: var(--s4);
+    font-size: var(--fs-sm);
+  }
+  section p {
+    max-width: 44rem;
+    margin-block: var(--s3);
+  }
+</style>

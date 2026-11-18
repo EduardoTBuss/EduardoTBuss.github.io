@@ -16,20 +16,22 @@ const profile = getProfile();
 >
   <div class="page-container reveal-up">
     <header class="page-header">
-      <span class="mono-tag page-eyebrow">// PEER-REVIEWED & PREPRINTS</span>
       <h1>Research, in print.</h1>
       <p class="page-desc">
         Papers on quantum and fuzzy systems, machine learning and computer vision.
         Related code is linked where available.
       </p>
+      {profile.links.scholar && (
+        <a class="button-text scholar-link" href={profile.links.scholar}>Google Scholar ↗</a>
+      )}
     </header>
+
+    <div class="publications-content">
+      <Publications />
+    </div>
 
     <div class="research-track scroll-reveal">
       <Research />
-    </div>
-
-    <div class="publications-content scroll-reveal" style="margin-top: var(--space-section);">
-      <Publications />
     </div>
   </div>
 </Base>
@@ -46,11 +48,6 @@ const profile = getProfile();
     padding-bottom: var(--s6);
   }
 
-  .page-eyebrow {
-    color: var(--accent);
-    margin-bottom: var(--s3);
-  }
-
   h1 {
     font-size: var(--fs-2xl);
     letter-spacing: -0.02em;
@@ -64,5 +61,12 @@ const profile = getProfile();
     max-width: 42rem;
     line-height: var(--lh-body);
     margin: 0;
+  }
+  .scholar-link {
+    display: inline-flex;
+    margin-top: var(--s3);
+  }
+  .research-track {
+    margin-top: var(--space-section);
   }
 </style>

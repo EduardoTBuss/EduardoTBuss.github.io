@@ -9,7 +9,7 @@ import {
 
 const profile = getProfile();
 const [publication] = getPublicationsFor([vqcDepthStudy.publicationId]);
-const paper = publication && publicationLink(publication);
+const paperUrl = publication && (publication.url || publicationLink(publication)?.url);
 const description =
   "Test F1 across circuit depths on three datasets, with a classical MLP baseline.";
 ---
@@ -24,7 +24,7 @@ const description =
         A second circuit layer improved test F1 on all three datasets. Going from
         two to four layers improved F1 detectably only on Banknote.
       </p>
-      {paper && <a class="button-primary" href={paper.url}>Read the paper ↗</a>}
+      {paperUrl && <a class="button-primary" href={paperUrl}>Read the paper ↗</a>}
     </header>
 
     <figure aria-labelledby="f1-caption">

@@ -10,6 +10,7 @@ interface Props {
 }
 const { publication, abstract, categoryTag = "cat-quantum" } = Astro.props;
 const link = publicationLink(publication);
+const proceedings = publication.url && publication.url !== link?.url && publication.url;
 // Editorial topic descriptions derived only from the canonical titles; never paper abstracts or findings.
 const topics: Record<string, string> = {
   "cec-2026-hybrid-fuzzy-cri":
@@ -57,6 +58,11 @@ const description = abstract || topics[publication.id] || publication.title;
     {
       publication.id === vqcDepthStudy.publicationId && (
         <a href={vqcDepthStudy.href} class="pub-action-btn">View results ↗</a>
+      )
+    }
+    {
+      proceedings && (
+        <a href={proceedings} class="pub-action-btn">Proceedings ↗</a>
       )
     }
     {

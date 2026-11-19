@@ -2,7 +2,7 @@
 import { getCollection, render } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import Metrics from '../../components/Metrics.astro';
-import { getProject, getPublicationsFor } from '../../lib/content';
+import { getProject, getPublicationsFor, publicationLink } from '../../lib/content';
 
 export async function getStaticPaths() {
   const pages = await getCollection('projects');
@@ -47,16 +47,17 @@ const { Content } = await render(page);
         {project.links.demo && <li><a href={project.links.demo} rel="noopener">Live demo</a></li>}
         {project.links.docs && <li><a href={project.links.docs} rel="noopener">Documentation</a></li>}
         {project.links.dataset && <li><a href={project.links.dataset} rel="noopener">Data source</a></li>}
-        {publications.map((p) => (
-          <li>
-            {p.doi
-              ? <a href={`https://doi.org/${p.doi}`} rel="noopener">{p.title}</a>
-              : p.url
-                ? <a href={p.url} rel="noopener">{p.title}</a>
-                : <span>{p.title}</span>}
-            <span class="muted">, {p.venue}, {p.year}</span>
-          </li>
-        ))}
+        {publications.map((publication) => {
+          const link = publicationLink(publication);
+          return (
+            <li>
+              {link
+                ? <a href={link.url} rel="noopener">{publication.title}</a>
+                : <span>{publication.title}</span>}
+              <span class="muted">, {publication.venue}, {publication.year}</span>
+            </li>
+          );
+        })}
       </ul>
     </section>
 

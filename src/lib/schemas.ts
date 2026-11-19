@@ -47,6 +47,7 @@ export const publicationsSchema = z.object({
     status: z.enum(['published', 'accepted', 'submitted', 'in preparation']),
     url: urlOrEmpty,
     doi: z.string().nullable(),
+    doi_unavailable: z.boolean().optional(),
   })),
 });
 

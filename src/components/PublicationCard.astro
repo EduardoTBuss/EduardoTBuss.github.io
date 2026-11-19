@@ -79,6 +79,9 @@ const description = abstract || topics[publication.id] || publication.title;
       ))
     }
   </div>
+  {publication.doi && publication.doi_unavailable && (
+    <p class="doi-status">DOI {publication.doi} · link currently unavailable</p>
+  )}
 </article>
 <style>
   .pub-card {
@@ -188,6 +191,12 @@ const description = abstract || topics[publication.id] || publication.title;
     font-size: 0.72rem;
     color: var(--accent);
     text-decoration: none;
+  }
+  .doi-status {
+    margin: 0;
+    color: var(--fg-muted);
+    font-size: var(--fs-sm);
+    overflow-wrap: anywhere;
   }
   .pub-action-btn:hover {
     text-decoration: underline;

@@ -1,6 +1,6 @@
 """Render the public case-study chart from ERAMIA-RS 2026, Table 1.
 
-Source: https://doi.org/10.5753/eramiars.2026.35498
+Source: https://sol.sbc.org.br/index.php/eramiars/article/view/47396
 Values are reported test F1 means and sample standard deviations across
 10 paired seeds. The main MLP baseline uses a learning rate of 0.05.
 """

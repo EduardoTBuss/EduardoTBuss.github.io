@@ -155,9 +155,9 @@ export const getGitHub = () => github;
 export const publicationMeta = (p: Publication): string =>
   p.status === 'published' ? `${p.venue}` : `${p.venue} (${p.status})`;
 
-/** DOI is preferred over a bare URL; either may be absent. */
+/** Prefer a working DOI, with the proceedings page as a fallback. */
 export const publicationLink = (p: Publication): { label: string; url: string } | null => {
-  if (p.doi) return { label: `DOI ${p.doi}`, url: `https://doi.org/${p.doi}` };
+  if (p.doi && !p.doi_unavailable) return { label: `DOI ${p.doi}`, url: `https://doi.org/${p.doi}` };
   if (p.url) return { label: 'Proceedings', url: p.url };
   return null;
 };

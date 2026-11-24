@@ -27,29 +27,50 @@ if (host && canvas && toggle && context) {
   } catch {
     /* Storage may be unavailable in private contexts. */
   }
-  // Deterministic seeds prevent visual changes between resize events.
-  const seeds = Array.from({ length: 50 }, (_, index) => ({
-    x: ((index * 73 + 19) % 101) / 101,
-    y: ((index * 47 + 31) % 103) / 103,
-    phase: index * 2.399963,
-    radius: index % 9 === 0 ? 1.7 : 0.8 + (index % 3) * 0.18,
-  }));
+  // Deterministic seeds: the paused frame is stable and positions derive from
+  // time alone, so nothing accumulates between frames or resize events.
+  const seeds = Array.from({ length: 90 }, (_, index) => {
+    const heading = -1.15 + ((index * 37) % 29) / 29; // mostly up and to the right
+    const speed = 5 + ((index * 53) % 17);
+    return {
+      x: ((index * 73 + 19) % 101) / 101,
+      y: ((index * 47 + 31) % 103) / 103,
+      vx: Math.cos(heading) * speed,
+      vy: Math.sin(heading) * speed,
+      phase: index * 2.399963,
+      radius: index % 11 === 0 ? 2.2 : 0.8 + (index % 4) * 0.3,
+      tone: index % 7 === 0 ? "195,201,255" : "133,207,239",
+      alpha: 0.22 + (index % 5) * 0.07,
+    };
+  });
+  const wrap = (value: number, size: number) =>
+    ((((value + 20) % (size + 40)) + size + 40) % (size + 40)) - 20;
 
   function draw() {
     ctx.clearRect(0, 0, width, height);
-    for (const seed of seeds) {
-      let x = seed.x * width + Math.sin(phase * 0.17 + seed.phase) * 12;
-      let y = seed.y * height + Math.cos(phase * 0.13 + seed.phase) * 10;
+    // Fewer particles on small screens keep density and cost constant.
+    const count = Math.min(seeds.length, Math.round((width * height) / 15000) + 24);
+    for (let i = 0; i < count; i += 1) {
+      const seed = seeds[i];
+      let x = wrap(seed.x * width + seed.vx * phase + Math.sin(phase * 0.4 + seed.phase) * 6, width);
+      let y = wrap(seed.y * height + seed.vy * phase, height);
       let proximity = 0;
       if (pointer.active) {
         const distance = Math.hypot(pointer.x - x, pointer.y - y);
-        proximity = Math.max(0, 1 - distance / 180);
-        x += (pointer.x - x) * proximity * 0.11;
-        y += (pointer.y - y) * proximity * 0.11;
+        proximity = Math.max(0, 1 - distance / 200);
+        x -= (pointer.x - x) * proximity * 0.18;
+        y -= (pointer.y - y) * proximity * 0.18;
+      }
+      const alpha = Math.min(0.9, seed.alpha + proximity * 0.4);
+      if (seed.radius > 2) {
+        ctx.beginPath();
+        ctx.arc(x, y, seed.radius * 3.2, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(${seed.tone},${alpha * 0.12})`;
+        ctx.fill();
       }
       ctx.beginPath();
-      ctx.arc(x, y, seed.radius + proximity * 0.9, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(133,207,239,${0.17 + proximity * 0.39})`;
+      ctx.arc(x, y, seed.radius + proximity * 0.8, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(${seed.tone},${alpha})`;
       ctx.fill();
     }
   }

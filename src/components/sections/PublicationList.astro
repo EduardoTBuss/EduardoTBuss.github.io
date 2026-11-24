@@ -1,0 +1,125 @@
+---
+/** Every publication as one scannable line. Titles and venues come from the canonical data. */
+import {
+  getProfile,
+  getPublications,
+  publicationLink,
+  publicationMeta,
+  vqcDepthStudy,
+} from "../../lib/content";
+const p = getProfile();
+const publications = getPublications();
+---
+
+<section class="overview-section" id="research" aria-labelledby="papers-heading">
+  <div class="section-heading">
+    <div>
+      <span class="section-kicker">02 / PUBLISHED RESEARCH</span>
+      <h2 id="papers-heading">{publications.length} publications.</h2>
+    </div>
+    <div class="heading-actions">
+      <a class="button-secondary" href="/publications/">All publications →</a><a
+        class="button-secondary"
+        href={p.links.scholar}>Google Scholar ↗</a
+      >
+    </div>
+  </div>
+  <ol class="pub-list">
+    {
+      publications.map((publication) => {
+        const link = publicationLink(publication);
+        const study = publication.id === vqcDepthStudy.publicationId;
+        return (
+          <li class:list={["pub-row", { highlight: study }]}>
+            <span class="pub-venue">
+              {publicationMeta(publication)}
+            </span>
+            <span class="pub-title">{publication.title}</span>
+            <span class="pub-links">
+              {study && (
+                <a class="pub-cta" href={vqcDepthStudy.href}>
+                  See results →
+                </a>
+              )}
+              {link && (
+                <a href={link.url} aria-label={`${link.label}: ${publication.title}`}>
+                  {link.label.startsWith("DOI") ? "DOI ↗" : "Proceedings ↗"}
+                </a>
+              )}
+            </span>
+          </li>
+        );
+      })
+    }
+  </ol>
+</section>
+<style>
+  .heading-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s2);
+  }
+  .pub-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    border-top: 1px solid var(--rule);
+  }
+  .pub-row {
+    display: grid;
+    grid-template-columns: minmax(150px, 0.9fr) minmax(0, 3fr) auto;
+    gap: var(--s2) var(--s5);
+    align-items: center;
+    padding: var(--s4) var(--s3);
+    border-bottom: 1px solid var(--rule);
+  }
+  .pub-row.highlight {
+    background: color-mix(in srgb, var(--accent) 7%, transparent);
+    border-left: 3px solid var(--accent);
+  }
+  .pub-venue {
+    font: 0.78rem/1.4 var(--font-mono);
+    color: var(--accent);
+  }
+  .pub-title {
+    font-size: 1.02rem;
+    line-height: 1.4;
+    color: var(--fg);
+  }
+  .pub-links {
+    display: flex;
+    gap: var(--s2);
+    justify-content: flex-end;
+    flex-wrap: wrap;
+  }
+  .pub-links a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0 var(--s4);
+    border: 1px solid var(--rule-bright);
+    border-radius: var(--radius-sm);
+    color: var(--fg);
+    font-size: 0.88rem;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .pub-links a:hover {
+    text-decoration: none;
+    border-color: var(--accent);
+  }
+  .pub-links .pub-cta {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--bg);
+  }
+  @media (max-width: 760px) {
+    .pub-row {
+      grid-template-columns: 1fr;
+      padding-inline: var(--s3);
+    }
+    .pub-links {
+      justify-content: flex-start;
+    }
+  }
+</style>

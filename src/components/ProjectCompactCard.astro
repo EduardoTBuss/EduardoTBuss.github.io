@@ -1,0 +1,100 @@
+---
+/** Homepage card: one visual, one line, one result, two clear actions. */
+import type { Project } from "../lib/schemas";
+import { projectHref } from "../lib/content";
+import { visualFor } from "../lib/visuals";
+import ProjectVisual from "./ProjectVisual.astro";
+interface Props {
+  project: Project;
+}
+const { project } = Astro.props;
+const href = projectHref(project);
+---
+
+<article class="compact-card tech-card">
+  <ProjectVisual kind={visualFor(project.slug)} compact />
+  <div class="body">
+    <p class="meta"><span>{project.category}</span><span>{project.year}</span></p>
+    <h3>{project.title}</h3>
+    <p class="tagline">{project.tagline}</p>
+    {project.headline_metric && <p class="metric">{project.headline_metric}</p>}
+    <div class="actions">
+      {
+        href && (
+          <a
+            class="button-primary"
+            href={href}
+            aria-label={`${project.title}: case study`}
+          >
+            Case study →
+          </a>
+        )
+      }<a
+        class="button-secondary"
+        href={project.links.repo}
+        aria-label={`${project.title}: code on GitHub`}>Code ↗</a
+      >
+    </div>
+  </div>
+</article>
+<style>
+  .compact-card {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    background:
+      radial-gradient(
+        420px circle at var(--spot-x, 50%) var(--spot-y, 50%),
+        var(--accent-glow),
+        transparent 70%
+      ),
+      var(--bg-elevated);
+    border: 1px solid var(--rule);
+    border-radius: 20px;
+    overflow: hidden;
+  }
+  .body {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: var(--s3);
+    padding: var(--s5);
+  }
+  .meta {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--s3);
+    font: 0.75rem var(--font-mono);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  h3 {
+    font-size: clamp(1.5rem, 2.2vw, 1.85rem);
+    line-height: 1.1;
+    letter-spacing: -0.04em;
+  }
+  .tagline {
+    color: var(--fg);
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+  .metric {
+    padding: var(--s3) var(--s4);
+    border-left: 3px solid var(--accent);
+    background: color-mix(in srgb, var(--accent) 7%, transparent);
+    color: var(--fg-muted);
+    font-size: 0.9rem;
+    line-height: 1.45;
+  }
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s2);
+    margin-top: auto;
+    padding-top: var(--s3);
+  }
+  .actions a {
+    flex: 1 1 auto;
+  }
+</style>

@@ -32,14 +32,16 @@ Set `DATA_SOURCE` to use another canonical data directory. `npm run build` alone
 | Shared motion rules | `src/styles/animations.css` |
 | Background rendering and pointer response | `src/components/InteractiveBackground.astro`, `src/scripts/interactive-background.ts` |
 | Hero copy and calls to action | `src/components/sections/Hero.astro` |
-| Horizontal project deck | `src/components/HorizontalProjectDeck.astro`, `src/scripts/project-deck.ts` |
+| Bloch sphere (hero and quantum project art) | `src/components/BlochSphere.astro`, geometry in `src/lib/bloch.ts`, precession in `src/scripts/bloch-sphere.ts` |
+| Homepage project cards, publication list, CV summary | `src/components/ProjectCompactCard.astro`, `src/components/sections/PublicationList.astro`, `src/components/sections/AtAGlance.astro` |
+| Horizontal project deck (projects page) | `src/components/HorizontalProjectDeck.astro`, `src/scripts/project-deck.ts` |
 | Pointer card illumination | `src/scripts/card-spotlight.ts` |
 | Home composition | `src/pages/index.astro` |
 | Individual home sections | `src/components/sections/` |
 | Publication disclosure and topic notes | `src/components/PublicationCard.astro` |
 | VQC research case study and chart | `src/pages/publications/vqc-depth/index.astro` and `scripts/generate-vqc-depth-figure.py` (Matplotlib) |
 | Project prose | `src/content/projects/<slug>.md` |
-| Order Forge card screenshot | `public/images/order-forge-reconciliation.png` (copied from `Order-forge/docs/assets/`) |
+| Order Forge card screenshot | `public/images/order-forge-reconciliation.webp` (WebP of the PNG in `Order-forge/docs/assets/`) |
 | Profile, project metadata, publication status, CV | `data/*.json` in the canonical sibling repository |
 | Homepage featured projects | `featuredSlugs` in `src/lib/content.ts` |
 | Validated content gateway | `src/lib/content.ts`, `src/lib/schemas.ts` |
@@ -51,7 +53,7 @@ The three homepage features are selected in `featuredSlugs` in `src/lib/content.
 
 ## Motion and accessibility
 
-The canvas is decorative and does not carry page content. Motion respects `prefers-reduced-motion`; the background controller pauses work when the document is hidden. Native links and publication `<details>` disclosures work without JavaScript and are usable by keyboard and touch. The project deck retains native scrolling. Keep visible focus states, touch targets, and reduced-motion behavior when adding interactions.
+The canvas is decorative and does not carry page content: a field of drifting particles, nothing else. The hero Bloch sphere renders complete at build time and only precesses while global motion is running. Motion respects `prefers-reduced-motion`; the background controller pauses work when the document is hidden. Native links and publication `<details>` disclosures work without JavaScript and are usable by keyboard and touch. The project deck retains native scrolling. Keep visible focus states, touch targets, and reduced-motion behavior when adding interactions.
 
 ## Build budgets
 
@@ -92,4 +94,4 @@ Project decisions and debugging checkpoints are recorded in Eduardo's Brain (`si
 
 `scripts/browser-smoke.mjs` checks a running production preview at `http://127.0.0.1:4321`. It uses Playwright with an isolated headless Chrome, never your personal Chrome profile. Install Playwright in a test environment or point `PORTFOLIO_PLAYWRIGHT_MODULE` at its module entry, then run `node scripts/browser-smoke.mjs`. `PORTFOLIO_PREVIEW_URL` overrides the preview URL. Screenshots and the JSON report are written to gitignored `artifacts/qa/`.
 
-Coverage: all 15 routes, mobile widths 320/390/768, desktop 1440, project controls and keyboard, publication radio filters and disclosures, pause persistence, reduced motion, and JavaScript-disabled reading.
+Coverage: all 16 routes, mobile widths 320/390/768, desktop 1440, homepage highlights in the first screen at 320/390/1440, every publication listed on the homepage, project deck controls and keyboard, publication radio filters and disclosures, pause persistence, reduced motion, and JavaScript-disabled reading.

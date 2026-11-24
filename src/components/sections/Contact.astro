@@ -5,24 +5,20 @@ const p = getProfile();
 
 <section class="contact-section" id="contact" aria-labelledby="contact-heading">
   <div>
-    <span class="section-kicker">04 / OPEN A CONVERSATION</span><h2
-      id="contact-heading"
-    >
-      Good ideas start<br />with <em>a conversation.</em>
-    </h2><p>
-      AI and ML engineering opportunities, research collaborations, or a question
-      about the systems and experiments shown here.
-    </p>
+    <span class="section-kicker">04 / CONTACT</span><h2 id="contact-heading">
+      Let's <em>talk.</em>
+    </h2><p>AI and ML engineering roles, research collaborations or questions.</p>
   </div>
   <div class="contact-actions">
-    <a class="button-primary" href={p.links.academic_email}>Get in touch ↗</a><a
+    <a class="button-primary" href={p.links.academic_email}>Email me →</a><a
       class="email"
       href={p.links.academic_email}
       >{p.links.academic_email.replace("mailto:", "")}</a
     ><nav aria-label="Academic and social profiles">
-      <a href={p.links.github}>GitHub ↗</a><a href={p.links.linkedin}
-        >LinkedIn ↗</a
-      ><a href={p.links.orcid}>ORCID ↗</a>
+      <a class="button-secondary" href={p.links.linkedin}>LinkedIn ↗</a><a
+        class="button-secondary"
+        href={p.links.github}>GitHub ↗</a
+      ><a class="button-secondary" href={p.links.orcid}>ORCID ↗</a>
     </nav>
   </div>
 </section>
@@ -33,7 +29,7 @@ const p = getProfile();
     gap: var(--s7);
     padding: var(--s8) 0;
     border-top: 1px solid var(--rule);
-    margin-top: var(--space-section);
+    margin-top: var(--s8);
   }
   h2 {
     font-size: clamp(2.5rem, 4vw, 3.6rem);
@@ -46,7 +42,7 @@ const p = getProfile();
     color: var(--accent);
   }
   p {
-    font-size: 0.85rem;
+    font-size: 1rem;
     color: var(--fg-muted);
     max-width: 27rem;
     margin-top: var(--s5);
@@ -59,16 +55,13 @@ const p = getProfile();
     gap: var(--s5);
   }
   .email {
-    font-size: 0.85rem;
+    font-size: 0.95rem;
     color: var(--fg-muted);
   }
   nav {
     display: flex;
-    gap: var(--s5);
-    font: 0.65rem var(--font-mono);
-  }
-  nav a {
-    color: var(--fg-muted);
+    flex-wrap: wrap;
+    gap: var(--s2);
   }
   @media (max-width: 760px) {
     .contact-section {

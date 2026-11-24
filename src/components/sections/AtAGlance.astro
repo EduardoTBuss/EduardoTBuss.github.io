@@ -1,0 +1,138 @@
+---
+/** CV essentials on the homepage, read from the canonical cv.json and research.json. */
+import { getCv, getResearch } from "../../lib/content";
+const cv = getCv();
+const research = getResearch();
+const [current, ...earlier] = cv.experience;
+const facts = [
+  current && { label: "Now", title: current.role, place: current.org, period: current.period },
+  ...earlier.map((item) => ({ label: "Before", title: item.role, place: item.org, period: item.period })),
+  ...cv.education.map((item) => ({
+    label: "Studying",
+    title: item.degree,
+    place: item.institution,
+    period: item.period,
+  })),
+].filter(Boolean) as { label: string; title: string; place: string; period: string }[];
+const skills = cv.skills.flatMap((group) => group.items).slice(0, 14);
+---
+
+<section class="overview-section glance" id="about" aria-labelledby="about-heading">
+  <div class="section-heading">
+    <div>
+      <span class="section-kicker">03 / AT A GLANCE</span>
+      <h2 id="about-heading">Background and focus.</h2>
+    </div>
+    <a class="button-secondary" href="/cv/">Full CV →</a>
+  </div>
+  <div class="glance-grid">
+    <ul class="facts">
+      {
+        facts.map((fact) => (
+          <li>
+            <span class="fact-label">{fact.label}</span>
+            <div>
+              <strong>{fact.title}</strong>
+              <span>
+                {fact.place} · {fact.period}
+              </span>
+            </div>
+          </li>
+        ))
+      }
+    </ul>
+    <div class="focus">
+      <ul class="tracks">
+        {
+          research.map((item) => (
+            <li>
+              <strong>{item.title}</strong>
+              <span>{item.detail}</span>
+            </li>
+          ))
+        }
+      </ul>
+      <ul class="skills" aria-label="Tools and skills">
+        {skills.map((skill) => <li>{skill}</li>)}
+      </ul>
+    </div>
+  </div>
+</section>
+<style>
+  .glance-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--s6);
+  }
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .facts {
+    display: grid;
+    gap: var(--s3);
+    align-content: start;
+  }
+  .facts li {
+    display: grid;
+    grid-template-columns: 6.5rem minmax(0, 1fr);
+    gap: var(--s4);
+    padding: var(--s4) var(--s5);
+    background: var(--bg-surface);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius-lg);
+  }
+  .fact-label {
+    font: 0.78rem var(--font-mono);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent);
+    padding-top: 3px;
+  }
+  .facts strong,
+  .tracks strong {
+    display: block;
+    font-size: 1.05rem;
+    line-height: 1.35;
+  }
+  .facts span:not(.fact-label),
+  .tracks span {
+    display: block;
+    margin-top: var(--s1);
+    color: var(--fg-muted);
+    font-size: 0.92rem;
+    line-height: 1.45;
+  }
+  .tracks {
+    display: grid;
+    gap: var(--s4);
+  }
+  .tracks li {
+    padding-left: var(--s4);
+    border-left: 3px solid var(--rule-bright);
+  }
+  .skills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s2);
+    margin-top: var(--s5);
+  }
+  .skills li {
+    padding: 6px 12px;
+    border: 1px solid var(--rule-bright);
+    border-radius: var(--radius-full);
+    color: var(--fg);
+    font-size: 0.85rem;
+  }
+  @media (max-width: 760px) {
+    .glance-grid {
+      grid-template-columns: 1fr;
+    }
+    .facts li {
+      grid-template-columns: 1fr;
+      gap: var(--s1);
+      padding: var(--s4);
+    }
+  }
+</style>

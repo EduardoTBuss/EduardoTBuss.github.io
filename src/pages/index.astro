@@ -1,22 +1,20 @@
 ---
-/** Overview composition. Detailed records remain on their dedicated routes. */
+/** Overview: the main work is readable here; dedicated routes hold the detail. */
 import Base from "../layouts/Base.astro";
 import Hero from "../components/sections/Hero.astro";
-import HorizontalProjectDeck from "../components/HorizontalProjectDeck.astro";
-import PublicationCard from "../components/PublicationCard.astro";
-import ResearchOverview from "../components/sections/ResearchOverview.astro";
+import ProjectCompactCard from "../components/ProjectCompactCard.astro";
+import PublicationList from "../components/sections/PublicationList.astro";
+import AtAGlance from "../components/sections/AtAGlance.astro";
 import Contact from "../components/sections/Contact.astro";
 import {
   getProfile,
   getPortfolioWork,
   getFeaturedWork,
-  getPublications,
   vqcDepthStudy,
 } from "../lib/content";
 const p = getProfile();
 const projects = getPortfolioWork();
 const featured = getFeaturedWork();
-const publications = getPublications();
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "Person",
@@ -35,61 +33,44 @@ const jsonLd = {
 >
   <div class="landing-grid">
     <div class="hero-column"><Hero /></div>
-    <nav class="quick-paths" aria-label="Featured engineering and research">
+    <nav class="quick-paths" aria-label="Start here">
       <a href="/projects/order-forge/">
         <span class="quick-label">Applied AI</span>
         <strong>Order Forge</strong>
-        <span>PDF orders to validated EDIFACT with human review.</span>
-        <small>See the workflow and benchmark ↗</small>
+        <span>PDF orders to validated EDIFACT, with human review.</span>
+        <span class="quick-cta">See the workflow →</span>
       </a>
       <a href={vqcDepthStudy.href}>
-        <span class="quick-label">Published research · ERAMIA-RS 2026</span>
+        <span class="quick-label">Published · ERAMIA-RS 2026</span>
         <strong>Does more circuit depth help?</strong>
-        <span>A second quantum circuit layer improved test F1 on three datasets.</span>
-        <small>See the results and classical baseline ↗</small>
+        <span>A second circuit layer improved test F1 on three datasets.</span>
+        <span class="quick-cta">See the results →</span>
       </a>
     </nav>
   </div>
-  <section class="overview-section" id="explore" aria-labelledby="work-heading">
+  <section class="overview-section" id="work" aria-labelledby="work-heading">
     <div class="section-heading">
       <div>
-        <span class="section-kicker">01 / SELECTED WORK</span><h2
-          id="work-heading"
-        >
-          Applied AI, research and systems.
-        </h2>
-      </div><a href="/projects/">Explore all {projects.length} projects ↗</a>
+        <span class="section-kicker">01 / FEATURED PROJECTS</span>
+        <h2 id="work-heading">Applied AI, research and systems.</h2>
+      </div>
+      <a class="button-secondary" href="/projects/">All {projects.length} projects →</a>
     </div>
-    <HorizontalProjectDeck projects={featured} />
-  </section>
-  <ResearchOverview />
-  <section class="overview-section" aria-labelledby="papers-heading">
-    <div class="section-heading">
-      <div>
-        <span class="section-kicker">03 / PUBLICATIONS</span><h2
-          id="papers-heading"
-        >
-          Research with published results.
-        </h2>
-      </div><a href="/publications/"
-        >All {publications.length} publications ↗</a>
-    </div>
-    <div class="publication-grid">
-      {
-        publications
-          .slice(0, 2)
-          .map((publication) => <PublicationCard publication={publication} />)
-      }
+    <div class="featured-grid">
+      {featured.map((project) => <ProjectCompactCard project={project} />)}
     </div>
   </section>
+  <PublicationList />
+  <AtAGlance />
   <Contact />
 </Base>
 <style>
   .landing-grid {
     display: grid;
-    grid-template-columns: minmax(0, 1.6fr) minmax(310px, 0.8fr);
-    gap: clamp(var(--s5), 4vw, var(--s8));
+    grid-template-columns: minmax(0, 1.75fr) minmax(300px, 0.8fr);
+    gap: clamp(var(--s5), 3vw, var(--s7));
     align-items: center;
+    padding-bottom: var(--s6);
     border-bottom: 1px solid var(--rule);
   }
   .hero-column {
@@ -116,36 +97,44 @@ const jsonLd = {
     background: var(--bg-elevated);
   }
   .quick-paths strong {
-    font-size: clamp(1.35rem, 2.5vw, 1.9rem);
+    font-size: clamp(1.35rem, 2.3vw, 1.8rem);
     letter-spacing: -0.04em;
     line-height: 1.15;
   }
   .quick-paths span {
-    font-size: 0.9rem;
+    font-size: 0.95rem;
+    line-height: 1.45;
     color: var(--fg-muted);
   }
   .quick-paths .quick-label {
-    font: 0.73rem var(--font-mono);
+    font: 0.78rem var(--font-mono);
     color: var(--accent);
   }
-  .quick-paths small {
-    margin-top: var(--s1);
-    color: var(--accent);
-    font-size: 0.78rem;
+  .quick-paths .quick-cta {
+    align-self: flex-start;
+    margin-top: var(--s2);
+    padding: 10px 16px;
+    border-radius: var(--radius-sm);
+    background: var(--accent);
+    color: var(--bg);
+    font-size: 0.92rem;
+    font-weight: 650;
   }
-  .overview-section {
-    margin-block: var(--space-section);
-  }
-  .publication-grid {
+  .featured-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: var(--s5);
+  }
+  @media (max-width: 1080px) {
+    .featured-grid {
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    }
   }
   @media (max-width: 760px) {
     .landing-grid {
       grid-template-columns: 1fr;
       gap: var(--s3);
-      padding-bottom: var(--s6);
+      padding-bottom: var(--s5);
     }
     .quick-paths {
       grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -158,13 +147,17 @@ const jsonLd = {
       font-size: clamp(1.07rem, 4vw, 1.3rem);
     }
     .quick-paths span {
-      font-size: 0.83rem;
+      font-size: 0.85rem;
       line-height: 1.4;
     }
-    .quick-paths small {
+    .quick-paths .quick-cta {
+      align-self: stretch;
       margin-top: auto;
+      padding: 10px 8px;
+      text-align: center;
+      font-size: 0.85rem;
     }
-    .publication-grid {
+    .featured-grid {
       grid-template-columns: 1fr;
     }
   }

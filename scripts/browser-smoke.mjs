@@ -62,11 +62,21 @@ try {
   }
   await page.goto(origin);
   assert.equal(await page.locator('.orbital-scene').count(), 0);
+  assert.equal(await page.locator('.hero svg.bloch-sphere').count(), 1, 'hero Bloch sphere');
   assert.deepEqual(
-    await page.locator('.deck-slide .actions .primary').evaluateAll((links) =>
+    await page.locator('.compact-card .actions .button-primary').evaluateAll((links) =>
       links.map((link) => link.getAttribute('href'))),
     ['/projects/order-forge/', '/projects/q-fie/', '/projects/poker-decision-analytics/'],
   );
+  assert.equal(
+    await page.locator('.pub-row').count(),
+    await page.evaluate(() => Number(document.querySelector('#papers-heading')?.textContent?.match(/\d+/)?.[0])),
+    'every publication listed on the homepage',
+  );
+  const firstScreen = await page.evaluate(() =>
+    [...document.querySelectorAll('.quick-paths a')].map((link) => link.getBoundingClientRect().bottom <= innerHeight),
+  );
+  assert.deepEqual(firstScreen, [true, true], 'highlights in the first screen at 1440');
   await page.goto(origin + '/projects/');
   assert.equal(await page.locator('.deck-slide').count(), 3, 'featured projects');
   assert.equal(await page.locator('.secondary-card').count(), 7, 'remaining case studies');
@@ -92,7 +102,7 @@ try {
     "1",
     "paused route remains readable",
   );
-  await page.goto(origin);
+  await page.goto(origin + "/projects/");
   await pause.click();
   const deck = page.locator("[data-project-deck]").first();
   await deck.locator("[data-deck-next]").click();
@@ -161,6 +171,14 @@ try {
       assert.equal(overflow.clear, true, `${route} overflow at ${width} (scrollWidth ${overflow.width}): ${overflow.culprits.join(', ')}`);
     }
     await page.goto(origin);
+    if (width !== 768)
+      assert.deepEqual(
+        await page.evaluate(() =>
+          [...document.querySelectorAll('.quick-paths a')].map((link) => link.getBoundingClientRect().bottom <= innerHeight),
+        ),
+        [true, true],
+        `highlights in the first screen at ${width}`,
+      );
     if (width === 390)
       await page.screenshot({ path: out + "/mobile-home.png", fullPage: true });
   }
@@ -172,7 +190,8 @@ try {
   const staticPage = await nojs.newPage();
   await staticPage.goto(origin);
   assert.equal(await staticPage.locator("h1").isVisible(), true);
-  assert.equal(await staticPage.locator(".deck-slide").count(), 3);
+  assert.equal(await staticPage.locator(".compact-card").count(), 3);
+  assert.equal(await staticPage.locator(".hero svg.bloch-sphere").isVisible(), true);
   await staticPage.goto(origin + "/publications/");
   await staticPage.locator('label[for="tab-ml"]').click();
   assert.equal(await staticPage.locator(".pub-item:visible").count(), mlCount);
@@ -188,6 +207,7 @@ try {
         routes: report,
         viewports: [1440, 768, 390, 320],
         checks: [
+          "homepage cards, publications and first-screen highlights",
           "deck pointer and keyboard",
           "publication filters and disclosure",
           "global pause and persistence",

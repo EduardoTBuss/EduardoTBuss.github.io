@@ -49,7 +49,7 @@ catalog codes before export. The [reference EDIFACT](https://github.com/EduardoT
 is the comparison target for this fixture.
 
 <figure>
-  <img src="/images/order-forge-reconciliation.png" width="666" height="910" loading="lazy" alt="Order Forge review screen with seven of seven lines resolved and Generate EDIFACT available." />
+  <img src="/images/order-forge-reconciliation.webp" width="666" height="910" loading="lazy" alt="Order Forge review screen with seven of seven lines resolved and Generate EDIFACT available." />
   <figcaption>The Bauprofil test order in the reconciliation screen before export.</figcaption>
 </figure>
 

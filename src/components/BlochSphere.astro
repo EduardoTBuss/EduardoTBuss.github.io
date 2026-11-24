@@ -1,0 +1,242 @@
+---
+/**
+ * Decorative Bloch sphere rendered at build time. It reads complete without JS;
+ * src/scripts/bloch-sphere.ts adds a slow precession of the state when motion
+ * is allowed. Illustration only, not a simulation result.
+ */
+import {
+  BLOCH,
+  curvePaths,
+  latitude,
+  meridian,
+  project,
+  stateOnSphere,
+} from "../lib/bloch";
+
+interface Props {
+  /** Unique prefix for SVG gradient ids when several spheres share a page. */
+  id: string;
+  /** Enables the precession controller. Static spheres cost no JS work. */
+  animated?: boolean;
+  class?: string;
+}
+const { id, animated = false, class: className } = Astro.props;
+
+const theta = (52 * Math.PI) / 180;
+const phi = (38 * Math.PI) / 180;
+const { size, center, radius } = BLOCH;
+const f = (n: number) => n.toFixed(1);
+
+const grid = [
+  curvePaths(latitude(Math.PI / 2)),
+  curvePaths(latitude(Math.PI / 4), 72),
+  curvePaths(latitude((3 * Math.PI) / 4), 72),
+  curvePaths(meridian(0)),
+  curvePaths(meridian(Math.PI / 3)),
+  curvePaths(meridian((2 * Math.PI) / 3)),
+];
+const axisEnds = [
+  { p: project(1.24, 0, 0), q: project(-1.18, 0, 0) },
+  { p: project(0, 1.24, 0), q: project(0, -1.18, 0) },
+  { p: project(0, 0, 1.18), q: project(0, 0, -1.18) },
+];
+const axisSegment = (end: { x: number; y: number }) =>
+  `M${f(center)} ${f(center)}L${f(end.x)} ${f(end.y)}`;
+const axesFront = axisEnds
+  .flatMap(({ p, q }) => [p, q])
+  .filter((end) => end.depth >= 0)
+  .map(axisSegment)
+  .join("");
+const axesBack = axisEnds
+  .flatMap(({ p, q }) => [p, q])
+  .filter((end) => end.depth < 0)
+  .map(axisSegment)
+  .join("");
+const labelX = project(1.38, 0, 0);
+const labelY = project(0, 1.36, 0);
+const north = project(0, 0, 1);
+const south = project(0, 0, -1);
+
+const tip = stateOnSphere(theta, phi);
+const foot = project(Math.sin(theta) * Math.cos(phi), Math.sin(theta) * Math.sin(phi), 0);
+const trail = curvePaths(latitude(theta), 64);
+const equatorRy = radius * Math.sin(BLOCH.elevation);
+const g = (name: string) => `${id}-${name}`;
+---
+
+<svg
+  class:list={["bloch-sphere", className]}
+  viewBox={`0 0 ${size} ${size}`}
+  role="img"
+  aria-label="Illustration: a Bloch sphere with a qubit state vector"
+  data-bloch={animated ? "" : undefined}
+  data-theta={theta}
+  data-phi={phi}
+>
+  <defs>
+    <radialGradient id={g("glow")} cx="50%" cy="50%" r="50%">
+      <stop offset="0.55" stop-color="#4fb6e6" stop-opacity="0.16"></stop>
+      <stop offset="1" stop-color="#4fb6e6" stop-opacity="0"></stop>
+    </radialGradient>
+    <radialGradient id={g("shell")} cx="36%" cy="28%" r="78%">
+      <stop offset="0" stop-color="#9fe6ff" stop-opacity="0.3"></stop>
+      <stop offset="0.45" stop-color="#2a6c99" stop-opacity="0.18"></stop>
+      <stop offset="0.85" stop-color="#14304f" stop-opacity="0.32"></stop>
+      <stop offset="1" stop-color="#77d9f5" stop-opacity="0.32"></stop>
+    </radialGradient>
+    <radialGradient id={g("disc")} cx="50%" cy="50%" r="50%">
+      <stop offset="0" stop-color="#77d9f5" stop-opacity="0.13"></stop>
+      <stop offset="1" stop-color="#77d9f5" stop-opacity="0.02"></stop>
+    </radialGradient>
+    <radialGradient id={g("spec")} cx="50%" cy="50%" r="50%">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.5"></stop>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0"></stop>
+    </radialGradient>
+    <linearGradient id={g("vector")} x1="0" y1="1" x2="1" y2="0">
+      <stop offset="0" stop-color="#77d9f5"></stop>
+      <stop offset="1" stop-color="#c3c9ff"></stop>
+    </linearGradient>
+    <radialGradient id={g("halo")} cx="50%" cy="50%" r="50%">
+      <stop offset="0" stop-color="#c3c9ff" stop-opacity="0.75"></stop>
+      <stop offset="1" stop-color="#9ba8ff" stop-opacity="0"></stop>
+    </radialGradient>
+  </defs>
+
+  <circle cx={center} cy={center} r={f(radius * 1.42)} fill={`url(#${g("glow")})`}></circle>
+
+  <g class="bs-back" fill="none">
+    {grid.map((c) => <path d={c.back} />)}
+    <path d={axesBack}></path>
+    <path class="bs-trail" d={trail.back} data-bloch-trail-back></path>
+  </g>
+
+  <circle class="bs-shell" cx={center} cy={center} r={radius} fill={`url(#${g("shell")})`}></circle>
+  <ellipse
+    cx={center}
+    cy={center}
+    rx={radius}
+    ry={f(equatorRy)}
+    fill={`url(#${g("disc")})`}
+  ></ellipse>
+
+  <g class="bs-front" fill="none">
+    {grid.map((c) => <path d={c.front} />)}
+    <path class="bs-axis" d={axesFront}></path>
+  </g>
+
+  <g class="bs-labels">
+    <text x={f(north.x)} y={f(north.y - 16)} text-anchor="middle">|0⟩</text>
+    <text x={f(south.x)} y={f(south.y + 30)} text-anchor="middle">|1⟩</text>
+    <text x={f(labelX.x)} y={f(labelX.y + 5)} text-anchor="middle">x</text>
+    <text x={f(labelY.x)} y={f(labelY.y + 5)} text-anchor="middle">y</text>
+  </g>
+
+  <g class="bs-state">
+    <path class="bs-trail" d={trail.front} data-bloch-trail-front></path>
+    <path
+      class="bs-drop"
+      d={`M${f(center)} ${f(center)}L${f(foot.x)} ${f(foot.y)}L${f(tip.x)} ${f(tip.y)}`}
+      data-bloch-drop></path>
+    <line
+      class="bs-vector"
+      x1={center}
+      y1={center}
+      x2={f(tip.x)}
+      y2={f(tip.y)}
+      stroke={`url(#${g("vector")})`}
+      data-bloch-vector></line>
+    <circle cx={center} cy={center} r="4" class="bs-origin"></circle>
+    <circle
+      cx={f(tip.x)}
+      cy={f(tip.y)}
+      r="22"
+      fill={`url(#${g("halo")})`}
+      data-bloch-halo></circle>
+    <circle cx={f(tip.x)} cy={f(tip.y)} r="6.5" class="bs-tip" data-bloch-tip></circle>
+    <text
+      class="bs-psi"
+      x={f(tip.x + 16)}
+      y={f(tip.y - 12)}
+      data-bloch-label>|ψ⟩</text
+    >
+  </g>
+
+  <ellipse
+    cx={f(center - radius * 0.38)}
+    cy={f(center - radius * 0.46)}
+    rx={f(radius * 0.3)}
+    ry={f(radius * 0.17)}
+    transform={`rotate(-28 ${f(center - radius * 0.38)} ${f(center - radius * 0.46)})`}
+    fill={`url(#${g("spec")})`}
+    opacity="0.35"></ellipse>
+</svg>
+
+<script>
+  import "../scripts/bloch-sphere";
+</script>
+
+<style>
+  .bloch-sphere {
+    display: block;
+    width: 100%;
+    height: auto;
+    overflow: visible;
+  }
+  .bs-back path {
+    stroke: #77d9f5;
+    stroke-opacity: 0.16;
+    stroke-width: 1;
+    stroke-dasharray: 3 5;
+  }
+  .bs-front path {
+    stroke: #8fdcf6;
+    stroke-opacity: 0.42;
+    stroke-width: 1.1;
+  }
+  .bs-front .bs-axis {
+    stroke: #c9e9f6;
+    stroke-opacity: 0.55;
+  }
+  .bs-shell {
+    stroke: #77d9f5;
+    stroke-opacity: 0.7;
+    stroke-width: 1.4;
+  }
+  .bs-labels text {
+    fill: #a8b8c9;
+    font: 500 17px ui-monospace, "JetBrains Mono", Consolas, monospace;
+  }
+  .bs-trail {
+    fill: none;
+    stroke: #c3c9ff;
+    stroke-opacity: 0.5;
+    stroke-width: 1.2;
+    stroke-dasharray: 2 4;
+  }
+  .bs-back .bs-trail {
+    stroke-opacity: 0.2;
+  }
+  .bs-drop {
+    fill: none;
+    stroke: #c3c9ff;
+    stroke-opacity: 0.45;
+    stroke-width: 1;
+    stroke-dasharray: 4 4;
+  }
+  .bs-vector {
+    stroke-width: 3.2;
+    stroke-linecap: round;
+  }
+  .bs-origin {
+    fill: #edf4fa;
+  }
+  .bs-tip {
+    fill: #f3f6ff;
+    stroke: #9ba8ff;
+    stroke-width: 2;
+  }
+  .bs-psi {
+    fill: #dfe3ff;
+    font: 600 20px ui-monospace, "JetBrains Mono", Consolas, monospace;
+  }
+</style>

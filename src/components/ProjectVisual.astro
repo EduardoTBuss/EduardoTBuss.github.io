@@ -1,18 +1,13 @@
 ---
 /** Concept art, never presented as executable simulation or measured evidence. */
+import BlochSphere from "./BlochSphere.astro";
+import type { VisualKind } from "../lib/visuals";
 interface Props {
-  kind:
-    | "orderforge"
-    | "physics"
-    | "nbody"
-    | "quantum"
-    | "qfie"
-    | "poker"
-    | "neuroevolution"
-    | "raytracer"
-    | "generic";
+  /** Shorter frame for the homepage grid. */
+  compact?: boolean;
+  kind: VisualKind;
 }
-const { kind } = Astro.props;
+const { kind, compact = false } = Astro.props;
 const labels = {
   orderforge: ["APPLIED AI / DOCUMENT INTAKE", "Orders in. Validated data out."],
   physics: ["01 / DYNAMICS", "Order from collision."],
@@ -27,7 +22,7 @@ const labels = {
 const label = labels[kind] ?? labels.generic;
 ---
 
-<div class:list={["project-visual", kind]}>
+<div class:list={["project-visual", kind, { compact }]}>
   <div class="heading">
     <span>{label[0]}</span><span aria-hidden="true">✳</span>
   </div>
@@ -36,7 +31,7 @@ const label = labels[kind] ?? labels.generic;
       kind === "orderforge" ? (
         <div class="product-frame">
           <img
-            src="/images/order-forge-reconciliation.png"
+            src="/images/order-forge-reconciliation.webp"
             alt="Order Forge reconciliation screen showing seven resolved order lines and the EDIFACT export action"
             loading="lazy"
             width="666"
@@ -87,49 +82,17 @@ const label = labels[kind] ?? labels.generic;
           </div>
         </div>
       ) : kind === "quantum" || kind === "qfie" ? (
-        <svg viewBox="0 0 500 400" class="quantum-art">
-          <defs>
-            <radialGradient id="bloch-fill" cx="40%" cy="34%" r="72%">
-              <stop offset="0" stop-color="#4eb8e3" stop-opacity="0.3" />
-              <stop offset="0.55" stop-color="#224f79" stop-opacity="0.14" />
-              <stop offset="1" stop-color="#163455" stop-opacity="0.02" />
-            </radialGradient>
-            <linearGradient id="state-vector" x1="0" y1="1" x2="1" y2="0">
-              <stop offset="0" stop-color="#76d8f6" />
-              <stop offset="1" stop-color="#b0b8ff" />
-            </linearGradient>
-            <marker id="vector-head" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
-              <path d="M0 0L8 4 0 8Z" fill="#b0b8ff" />
-            </marker>
-          </defs>
-          <g class="bloch-axis">
-            <path d="M250 333V34M94 242L406 127M105 127L397 251" />
-            <text x="255" y="29">z</text>
-            <text x="408" y="126">x</text>
-            <text x="398" y="262">y</text>
-            <text x="261" y="61">|0⟩</text>
-            <text x="261" y="316">|1⟩</text>
-          </g>
-          <g class="sphere">
-            <circle class="sphere-shell" cx="250" cy="180" r="121" />
-            <path class="sphere-dashed" d="M129 180A121 44 0 0 1 371 180" />
-            <path d="M129 180A121 44 0 0 0 371 180" />
-            <ellipse cx="250" cy="180" rx="49" ry="121" />
-            <path class="sphere-dashed" d="M250 59A84 121 0 0 1 250 301" />
-            <circle class="state-origin" cx="250" cy="180" r="4" />
-            <path class="state-vector" d="M250 180L320 84" marker-end="url(#vector-head)" />
-            <circle class="state-point" cx="320" cy="84" r="5" />
-            <text class="state-label" x="330" y="80">|ψ⟩</text>
-          </g>
+        <div class="quantum-art">
+          <BlochSphere id={`pv-${kind}`} />
           {kind === "qfie" && (
-            <g class="fuzzy-curves">
+            <svg viewBox="80 316 350 66" class="fuzzy-curves">
               <path d="M90 358Q155 358 194 324Q233 358 274 358" />
               <path d="M204 358Q278 358 320 324Q359 358 419 358" />
               <path class="fuzzy-baseline" d="M90 358H419" />
               <text x="90" y="378">μ(x)</text>
-            </g>
+            </svg>
           )}
-        </svg>
+        </div>
       ) : kind === "neuroevolution" ? (
         <svg viewBox="0 0 500 360" class="network-art">
           <g class="network-links">
@@ -374,51 +337,25 @@ const label = labels[kind] ?? labels.generic;
     max-width: 500px;
     overflow: visible;
   }
-  .bloch-axis {
-    fill: none;
-    stroke: #87b5d1;
-    stroke-width: 1;
-    stroke-dasharray: 3 6;
-    opacity: 0.5;
+  .quantum-art {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    width: 100%;
+    height: 100%;
   }
-  .bloch-axis text {
-    stroke: none;
-    fill: #c8eaf8;
-    font: 13px var(--font-mono);
-    opacity: 0.95;
+  .quantum-art :global(.bloch-sphere) {
+    flex: 1 1 0;
+    min-height: 0;
+    width: 100%;
+    height: 100%;
   }
-  .sphere {
-    fill: none;
-    stroke: var(--accent);
-    stroke-width: 1.25;
-    opacity: 0.84;
-    transform-origin: 250px 180px;
-    animation: sphere-breathe 10s ease-in-out infinite;
-  }
-  .sphere-shell {
-    fill: url(#bloch-fill);
-    stroke-width: 1.7;
-  }
-  .sphere-dashed {
-    stroke-dasharray: 4 5;
-    opacity: 0.43;
-  }
-  .state-vector {
-    stroke: url(#state-vector);
-    stroke-width: 3;
-  }
-  .state-origin,
-  .state-point {
-    stroke: none;
-    fill: #b8eaff;
-  }
-  .state-point {
-    filter: drop-shadow(0 0 8px #90dfff);
-  }
-  .state-label {
-    stroke: none;
-    fill: #c9eefa;
-    font: 16px var(--font-mono);
+  .art .fuzzy-curves {
+    flex: none;
+    width: min(70%, 320px);
+    height: auto;
   }
   .fuzzy-curves {
     fill: none;
@@ -508,22 +445,41 @@ const label = labels[kind] ?? labels.generic;
       translate: 0 -9px;
     }
   }
-  @keyframes sphere-breathe {
-    50% {
-      opacity: 1;
-      transform: scale(1.015);
-    }
-  }
   :global(html[data-motion="paused"]) .orbit,
-  :global(html[data-motion="paused"]) .block,
-  :global(html[data-motion="paused"]) .sphere {
+  :global(html[data-motion="paused"]) .block {
     animation-play-state: paused;
   }
   @media (prefers-reduced-motion: reduce) {
     .orbit,
-    .block,
-    .sphere {
+    .block {
       animation: none;
+    }
+  }
+  .project-visual.compact {
+    min-height: 280px;
+    padding: 20px;
+    border-right: 0;
+    border-bottom: 1px solid var(--rule);
+  }
+  .compact .art,
+  .compact.orderforge .art {
+    inset: 34px 0 42px;
+  }
+  /* The card body already carries the title; keep only the provenance note. */
+  .compact .caption p {
+    display: none;
+  }
+  .compact .product-frame {
+    width: min(62%, 230px);
+  }
+  @media (max-width: 760px) {
+    .project-visual.compact {
+      min-height: 250px;
+      padding: 18px;
+    }
+    .compact .art {
+      inset: 30px 0 40px;
+      transform: none;
     }
   }
   @media (max-width: 760px) {
